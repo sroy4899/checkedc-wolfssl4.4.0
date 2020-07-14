@@ -197,7 +197,7 @@ int wc_HmacSizeByType(int type)
     return ret;
 }
 
-int _InitHmac(Hmac* hmac, int type, void* heap)
+int _InitHmac(_Ptr<Hmac> hmac, int type, void *heap)
 {
     int ret = 0;
 
@@ -276,7 +276,7 @@ int _InitHmac(Hmac* hmac, int type, void* heap)
 }
 
 
-int wc_HmacSetKey(Hmac* hmac, int type, const byte* key, word32 length)
+int wc_HmacSetKey(Hmac *hmac : itype(_Ptr<Hmac>), int type, const byte *key, word32 length)
 {
     byte*  ip;
     byte*  op;
@@ -568,7 +568,7 @@ int wc_HmacSetKey(Hmac* hmac, int type, const byte* key, word32 length)
 }
 
 
-static int HmacKeyInnerHash(Hmac* hmac)
+static int HmacKeyInnerHash(_Ptr<Hmac> hmac)
 {
     int ret = 0;
 
@@ -651,7 +651,7 @@ static int HmacKeyInnerHash(Hmac* hmac)
 }
 
 
-int wc_HmacUpdate(Hmac* hmac, const byte* msg, word32 length)
+int wc_HmacUpdate(Hmac *hmac : itype(_Ptr<Hmac>), const byte *msg, word32 length)
 {
     int ret = 0;
 
@@ -754,7 +754,7 @@ int wc_HmacUpdate(Hmac* hmac, const byte* msg, word32 length)
 }
 
 
-int wc_HmacFinal(Hmac* hmac, byte* hash)
+int wc_HmacFinal(Hmac *hmac : itype(_Ptr<Hmac>), byte *hash)
 {
     int ret;
 
@@ -977,7 +977,7 @@ int wc_HmacFinal(Hmac* hmac, byte* hash)
 
 
 /* Initialize Hmac for use with async device */
-int wc_HmacInit(Hmac* hmac, void* heap, int devId)
+int wc_HmacInit(Hmac *hmac, void *heap, int devId)
 {
     int ret = 0;
 
@@ -1025,7 +1025,7 @@ int  wc_HmacInit_Id(Hmac* hmac, unsigned char* id, int len, void* heap,
 #endif
 
 /* Free Hmac from use with async device */
-void wc_HmacFree(Hmac* hmac)
+void wc_HmacFree(Hmac *hmac : itype(_Ptr<Hmac>))
 {
     if (hmac == NULL)
         return;

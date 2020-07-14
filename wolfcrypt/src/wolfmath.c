@@ -72,7 +72,7 @@
 
 
 #if !defined(WOLFSSL_SP_MATH)
-int get_digit_count(mp_int* a)
+int get_digit_count(_Ptr<mp_int> a)
 {
     if (a == NULL)
         return 0;
@@ -81,7 +81,7 @@ int get_digit_count(mp_int* a)
 }
 #endif
 
-mp_digit get_digit(mp_int* a, int n)
+mp_digit get_digit(_Ptr<mp_int> a, int n)
 {
     if (a == NULL)
         return 0;
@@ -97,7 +97,7 @@ mp_digit get_digit(mp_int* a, int n)
  * returns BAD_FUNC_ARG when a or b is NULL, MEMORY_E when growing b fails and
  *         MP_OKAY otherwise.
  */
-int mp_cond_copy(mp_int* a, int copy, mp_int* b)
+int mp_cond_copy(_Ptr<mp_int> a, int copy, _Ptr<mp_int> b)
 {
     int err = MP_OKAY;
     int i;
@@ -129,7 +129,7 @@ int mp_cond_copy(mp_int* a, int copy, mp_int* b)
 }
 
 #ifndef WC_NO_RNG
-int get_rand_digit(WC_RNG* rng, mp_digit* d)
+int get_rand_digit(_Ptr<WC_RNG> rng, mp_digit *d)
 {
     return wc_RNG_GenerateBlock(rng, (byte*)d, sizeof(mp_digit));
 }
@@ -196,8 +196,7 @@ int mp_rand(mp_int* a, int digits, WC_RNG* rng)
 /* export an mp_int as unsigned char or hex string
  * encType is WC_TYPE_UNSIGNED_BIN or WC_TYPE_HEX_STR
  * return MP_OKAY on success */
-int wc_export_int(mp_int* mp, byte* buf, word32* len, word32 keySz,
-    int encType)
+int wc_export_int(_Ptr<mp_int> mp, byte *buf, _Ptr<word32> len, word32 keySz, int encType)
 {
     int err;
 

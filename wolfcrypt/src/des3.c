@@ -1338,7 +1338,7 @@
         0x00001040,0x00040040,0x10000000,0x10041000}
     };
 
-    static WC_INLINE void IPERM(word32* left, word32* right)
+    static void IPERM(_Ptr<word32> left, _Ptr<word32> right)
     {
         word32 work;
 
@@ -1364,7 +1364,7 @@
         *right ^= work;
     }
 
-    static WC_INLINE void FPERM(word32* left, word32* right)
+    static void FPERM(_Ptr<word32> left, _Ptr<word32> right)
     {
         word32 work;
 
@@ -1391,7 +1391,7 @@
         *left = rotrFixed(*left^work, 4U);
     }
 
-    static int DesSetKey(const byte* key, int dir, word32* out)
+    static int DesSetKey(const byte *key, int dir, word32 *out)
     {
         #define DES_KEY_BUFFER_SIZE (56+56+8)
     #ifdef WOLFSSL_SMALL_STACK
@@ -1466,14 +1466,14 @@
         return 0;
     }
 
-    int wc_Des_SetKey(Des* des, const byte* key, const byte* iv, int dir)
+    int wc_Des_SetKey(Des *des : itype(_Ptr<Des>), const byte *key, const byte *iv, int dir)
     {
         wc_Des_SetIV(des, iv);
 
         return DesSetKey(key, dir, des->key);
     }
 
-    int wc_Des3_SetKey(Des3* des, const byte* key, const byte* iv, int dir)
+    int wc_Des3_SetKey(Des3 *des : itype(_Ptr<Des3>), const byte *key, const byte *iv, int dir)
     {
         int ret;
 
@@ -1506,7 +1506,7 @@
         return wc_Des3_SetIV(des, iv);
     }
 
-    static void DesRawProcessBlock(word32* lIn, word32* rIn, const word32* kptr)
+    static void DesRawProcessBlock(_Ptr<word32> lIn, _Ptr<word32> rIn, const word32 *kptr)
     {
         word32 l = *lIn, r = *rIn, i;
 
@@ -1538,7 +1538,7 @@
         *lIn = l; *rIn = r;
     }
 
-    static void DesProcessBlock(Des* des, const byte* in, byte* out)
+    static void DesProcessBlock(_Ptr<Des> des, const byte *in, byte *out)
     {
         word32 l, r;
 
@@ -1561,7 +1561,7 @@
         XMEMCPY(out + sizeof(r), &l, sizeof(l));
     }
 
-    static void Des3ProcessBlock(Des3* des, const byte* in, byte* out)
+    static void Des3ProcessBlock(_Ptr<Des3> des, const byte *in, byte *out)
     {
         word32 l, r;
 
@@ -1586,7 +1586,7 @@
         XMEMCPY(out + sizeof(r), &l, sizeof(l));
     }
 
-    int wc_Des_CbcEncrypt(Des* des, byte* out, const byte* in, word32 sz)
+    int wc_Des_CbcEncrypt(Des *des : itype(_Ptr<Des>), byte *out, const byte *in, word32 sz)
     {
         word32 blocks = sz / DES_BLOCK_SIZE;
 
@@ -1601,7 +1601,7 @@
         return 0;
     }
 
-    int wc_Des_CbcDecrypt(Des* des, byte* out, const byte* in, word32 sz)
+    int wc_Des_CbcDecrypt(Des *des : itype(_Ptr<Des>), byte *out, const byte *in, word32 sz)
     {
         word32 blocks = sz / DES_BLOCK_SIZE;
 
@@ -1617,7 +1617,7 @@
         return 0;
     }
 
-    int wc_Des3_CbcEncrypt(Des3* des, byte* out, const byte* in, word32 sz)
+    int wc_Des3_CbcEncrypt(Des3 *des : itype(_Ptr<Des3>), byte *out, const byte *in, word32 sz)
     {
         word32 blocks;
 
@@ -1668,7 +1668,7 @@
     }
 
 
-    int wc_Des3_CbcDecrypt(Des3* des, byte* out, const byte* in, word32 sz)
+    int wc_Des3_CbcDecrypt(Des3 *des : itype(_Ptr<Des3>), byte *out, const byte *in, word32 sz)
     {
         word32 blocks;
 
@@ -1759,7 +1759,7 @@
 #endif /* NEED_SOFT_DES */
 
 
-void wc_Des_SetIV(Des* des, const byte* iv)
+void wc_Des_SetIV(_Ptr<Des> des, const byte *iv)
 {
     if (des && iv)
         XMEMCPY(des->reg, iv, DES_BLOCK_SIZE);
@@ -1767,7 +1767,7 @@ void wc_Des_SetIV(Des* des, const byte* iv)
         XMEMSET(des->reg,  0, DES_BLOCK_SIZE);
 }
 
-int wc_Des3_SetIV(Des3* des, const byte* iv)
+int wc_Des3_SetIV(_Ptr<Des3> des, const byte *iv)
 {
     if (des == NULL) {
         return BAD_FUNC_ARG;
@@ -1782,7 +1782,7 @@ int wc_Des3_SetIV(Des3* des, const byte* iv)
 
 
 /* Initialize Des3 for use with async device */
-int wc_Des3Init(Des3* des3, void* heap, int devId)
+int wc_Des3Init(Des3 *des3 : itype(_Ptr<Des3>), void *heap, int devId)
 {
     int ret = 0;
     if (des3 == NULL)
@@ -1806,7 +1806,7 @@ int wc_Des3Init(Des3* des3, void* heap, int devId)
 }
 
 /* Free Des3 from use with async device */
-void wc_Des3Free(Des3* des3)
+void wc_Des3Free(Des3 *des3 : itype(_Ptr<Des3>))
 {
     if (des3 == NULL)
         return;

@@ -332,7 +332,7 @@
     /* Software implementation */
     #define USE_SHA_SOFTWARE_IMPL
 
-    static int InitSha(wc_Sha* sha)
+    static int InitSha(_Ptr<wc_Sha> sha)
     {
         int ret = 0;
 
@@ -356,7 +356,7 @@
 /* Software implementation */
 #ifdef USE_SHA_SOFTWARE_IMPL
 
-static WC_INLINE void AddLength(wc_Sha* sha, word32 len)
+static void AddLength(_Ptr<wc_Sha> sha, word32 len)
 {
     word32 tmp = sha->loLen;
     if ((sha->loLen += len) < tmp)
@@ -396,7 +396,7 @@ static WC_INLINE void AddLength(wc_Sha* sha, word32 len)
     #define R4(v,w,x,y,z,i) (z)+= f4((w),(x),(y)) + blk1((i)) + 0xCA62C1D6+ \
         rotlFixed((v),5); (w) = rotlFixed((w),30);
 
-    static int Transform(wc_Sha* sha, const byte* data)
+    static int Transform(_Ptr<wc_Sha> sha, const byte *data)
     {
         word32 W[WC_SHA_BLOCK_SIZE / sizeof(word32)];
 
@@ -477,7 +477,7 @@ static WC_INLINE void AddLength(wc_Sha* sha, word32 len)
 #endif /* !USE_CUSTOM_SHA_TRANSFORM */
 
 
-int wc_InitSha_ex(wc_Sha* sha, void* heap, int devId)
+int wc_InitSha_ex(_Ptr<wc_Sha> sha, void *heap, int devId)
 {
     int ret = 0;
 
@@ -509,7 +509,7 @@ int wc_InitSha_ex(wc_Sha* sha, void* heap, int devId)
 }
 
 /* do block size increments/updates */
-int wc_ShaUpdate(wc_Sha* sha, const byte* data, word32 len)
+int wc_ShaUpdate(wc_Sha *sha : itype(_Ptr<wc_Sha>), const byte *data, word32 len)
 {
     int ret = 0;
     word32 blocksLen;
@@ -643,7 +643,7 @@ int wc_ShaUpdate(wc_Sha* sha, const byte* data, word32 len)
     return ret;
 }
 
-int wc_ShaFinalRaw(wc_Sha* sha, byte* hash)
+int wc_ShaFinalRaw(_Ptr<wc_Sha> sha, byte *hash)
 {
 #ifdef LITTLE_ENDIAN_ORDER
     word32 digest[WC_SHA_DIGEST_SIZE / sizeof(word32)];
@@ -663,7 +663,7 @@ int wc_ShaFinalRaw(wc_Sha* sha, byte* hash)
     return 0;
 }
 
-int wc_ShaFinal(wc_Sha* sha, byte* hash)
+int wc_ShaFinal(wc_Sha *sha : itype(_Ptr<wc_Sha>), byte *hash)
 {
     int ret;
     byte* local;
@@ -770,12 +770,12 @@ int wc_ShaFinal(wc_Sha* sha, byte* hash)
 #endif /* USE_SHA_SOFTWARE_IMPL */
 
 
-int wc_InitSha(wc_Sha* sha)
+int wc_InitSha(wc_Sha *sha : itype(_Ptr<wc_Sha>))
 {
     return wc_InitSha_ex(sha, NULL, INVALID_DEVID);
 }
 
-void wc_ShaFree(wc_Sha* sha)
+void wc_ShaFree(wc_Sha *sha : itype(_Ptr<wc_Sha>))
 {
     if (sha == NULL)
         return;
@@ -802,7 +802,7 @@ void wc_ShaFree(wc_Sha* sha)
 #ifndef WOLFSSL_TI_HASH
 #if !defined(WOLFSSL_RENESAS_TSIP_CRYPT) || \
     defined(NO_WOLFSSL_RENESAS_TSIP_CRYPT_HASH)
-int wc_ShaGetHash(wc_Sha* sha, byte* hash)
+int wc_ShaGetHash(wc_Sha *sha, byte *hash)
 {
     int ret;
     wc_Sha tmpSha;
@@ -832,7 +832,7 @@ int wc_ShaGetHash(wc_Sha* sha, byte* hash)
     return ret;
 }
 
-int wc_ShaCopy(wc_Sha* src, wc_Sha* dst)
+int wc_ShaCopy(wc_Sha *src, wc_Sha *dst)
 {
     int ret = 0;
 

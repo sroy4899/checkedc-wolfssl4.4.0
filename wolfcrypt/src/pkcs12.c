@@ -112,7 +112,7 @@ struct WC_PKCS12 {
 
 /* for friendlyName, localKeyId .... */
 typedef struct WC_PKCS12_ATTRIBUTE {
-    byte* data;
+    _Ptr<byte> data;
     word32 oid;
     word32 dataSz;
 } WC_PKCS12_ATTRIBUTE;
@@ -133,7 +133,7 @@ WC_PKCS12* wc_PKCS12_new(void)
 }
 
 
-static void freeSafe(AuthenticatedSafe* safe, void* heap)
+static void freeSafe(AuthenticatedSafe *safe, void *heap)
 {
     int i;
 
@@ -156,7 +156,7 @@ static void freeSafe(AuthenticatedSafe* safe, void* heap)
 }
 
 
-void wc_PKCS12_free(WC_PKCS12* pkcs12)
+void wc_PKCS12_free(WC_PKCS12 *pkcs12)
 {
     void* heap;
 
@@ -190,8 +190,7 @@ void wc_PKCS12_free(WC_PKCS12* pkcs12)
 }
 
 
-static int GetSafeContent(WC_PKCS12* pkcs12, const byte* input,
-                          word32* idx, int maxIdx)
+static int GetSafeContent(_Ptr<WC_PKCS12> pkcs12, const byte *input, _Ptr<word32> idx, int maxIdx)
 {
     AuthenticatedSafe* safe;
     word32 oid;
@@ -351,8 +350,7 @@ static int GetSafeContent(WC_PKCS12* pkcs12, const byte* input,
 
 
 /* optional mac data */
-static int GetSignData(WC_PKCS12* pkcs12, const byte* mem, word32* idx,
-                       word32 totalSz)
+static int GetSignData(_Ptr<WC_PKCS12> pkcs12, const byte *mem, _Ptr<word32> idx, word32 totalSz)
 {
     MacData* mac;
     word32 curIdx = *idx;
@@ -497,8 +495,7 @@ exit_gsd:
  * returns the size of mac created on success. A negative value will be returned
  *         in the case that an error happened.
  */
-static int wc_PKCS12_create_mac(WC_PKCS12* pkcs12, byte* data, word32 dataSz,
-                         const byte* psw, word32 pswSz, byte* out, word32 outSz)
+static int wc_PKCS12_create_mac(WC_PKCS12 *pkcs12 : itype(_Ptr<WC_PKCS12>), byte *data, word32 dataSz, const byte *psw, word32 pswSz, byte *out, word32 outSz)
 {
     Hmac     hmac;
     MacData* mac;
@@ -570,8 +567,7 @@ static int wc_PKCS12_create_mac(WC_PKCS12* pkcs12, byte* data, word32 dataSz,
 
 /* check mac on pkcs12, pkcs12->mac has been sanity checked before entering *
  * returns the result of comparison, success is 0 */
-static int wc_PKCS12_verify(WC_PKCS12* pkcs12, byte* data, word32 dataSz,
-                            const byte* psw, word32 pswSz)
+static int wc_PKCS12_verify(_Ptr<WC_PKCS12> pkcs12, byte *data, word32 dataSz, const byte *psw, word32 pswSz)
 {
     MacData* mac;
     int ret;
@@ -620,7 +616,7 @@ static int wc_PKCS12_verify(WC_PKCS12* pkcs12, byte* data, word32 dataSz,
  * pkcs12 : non-null pkcs12 pointer
  * return 0 on success and negative on failure.
  */
-int wc_d2i_PKCS12(const byte* der, word32 derSz, WC_PKCS12* pkcs12)
+int wc_d2i_PKCS12(const byte *der, word32 derSz, _Ptr<WC_PKCS12> pkcs12)
 {
     word32 idx  = 0;
     word32 totalSz = 0;
@@ -700,7 +696,7 @@ int wc_d2i_PKCS12(const byte* der, word32 derSz, WC_PKCS12* pkcs12)
  *          the "der" buffer passed in is NULL and LENGTH_ONLY_E is returned.
  * return size of DER on success and negative on failure.
  */
-int wc_i2d_PKCS12(WC_PKCS12* pkcs12, byte** der, int* derSz)
+int wc_i2d_PKCS12(_Ptr<WC_PKCS12> pkcs12, _Ptr<byte*> der, _Ptr<int> derSz)
 {
     int ret = 0;
     word32 seqSz = 0, verSz = 0, totalSz = 0, idx = 0, sdBufSz = 0;
@@ -906,7 +902,7 @@ int wc_i2d_PKCS12(WC_PKCS12* pkcs12, byte** der, int* derSz)
 
 
 /* helper function to free WC_DerCertList */
-void wc_FreeCertList(WC_DerCertList* list, void* heap)
+void wc_FreeCertList(WC_DerCertList *list, void *heap)
 {
     WC_DerCertList* current = list;
     WC_DerCertList* next;
@@ -927,8 +923,7 @@ void wc_FreeCertList(WC_DerCertList* list, void* heap)
     (void)heap;
 }
 
-static void freeDecCertList(WC_DerCertList** list, byte** pkey, word32* pkeySz,
-    byte** cert, word32* certSz, void* heap)
+static void freeDecCertList(_Ptr<WC_DerCertList*> list, _Ptr<byte*> pkey, _Ptr<word32> pkeySz, _Ptr<byte*> cert, _Ptr<word32> certSz, void *heap)
 {
     WC_DerCertList* current  = *list;
     WC_DerCertList* previous = NULL;
@@ -975,9 +970,7 @@ static void freeDecCertList(WC_DerCertList** list, byte** pkey, word32* pkeySz,
  * cert   : x509 cert returned
  * ca     : optional ca returned
  */
-int wc_PKCS12_parse(WC_PKCS12* pkcs12, const char* psw,
-        byte** pkey, word32* pkeySz, byte** cert, word32* certSz,
-        WC_DerCertList** ca)
+int wc_PKCS12_parse(_Ptr<WC_PKCS12> pkcs12, const char *psw, _Ptr<byte*> pkey, _Ptr<word32> pkeySz, _Ptr<byte*> cert, _Ptr<word32> certSz, _Ptr<WC_DerCertList*> ca)
 {
     ContentInfo* ci       = NULL;
     WC_DerCertList* certList = NULL;
@@ -1360,7 +1353,7 @@ int wc_PKCS12_parse(WC_PKCS12* pkcs12, const char* psw,
 
     /* check if key pair, remove from list */
     if (*pkey != NULL) {
-        freeDecCertList(&certList, pkey, pkeySz, cert, certSz, pkcs12->heap);
+        freeDecCertList(((WC_DerCertList **)&certList), ((byte **)pkey), pkeySz, ((byte **)cert), certSz, pkcs12->heap);
     }
 
     /* if ca arg provided return certList, otherwise free it */
@@ -1410,9 +1403,7 @@ exit_pk12par:
  *
  * returns the size of the shrouded key on success
  */
-static int wc_PKCS12_shroud_key(WC_PKCS12* pkcs12, WC_RNG* rng,
-        byte* out, word32* outSz, byte* key, word32 keySz, int vAlgo,
-        const char* pass, int passSz, int itt)
+static int wc_PKCS12_shroud_key(_Ptr<WC_PKCS12> pkcs12, _Ptr<WC_RNG> rng, byte *out, _Ptr<word32> outSz, byte *key, word32 keySz, int vAlgo, const char *pass, int passSz, int itt)
 {
     void* heap;
     word32 tmpIdx = 0;
@@ -1444,7 +1435,7 @@ static int wc_PKCS12_shroud_key(WC_PKCS12* pkcs12, WC_RNG* rng,
         WOLFSSL_MSG("creating PKCS12 Key Bag");
 
         /* check key type and get OID if ECC */
-        if ((ret = wc_GetKeyOID(key, keySz, &curveOID, &oidSz, &algoID, heap))
+        if ((ret = wc_GetKeyOID(key, keySz, ((const byte **)&curveOID), &oidSz, &algoID, heap))
                 < 0) {
             return ret;
         }
@@ -1504,9 +1495,7 @@ static int wc_PKCS12_shroud_key(WC_PKCS12* pkcs12, WC_RNG* rng,
  *
  * returns the size of the key bag on success
  */
-static int wc_PKCS12_create_key_bag(WC_PKCS12* pkcs12, WC_RNG* rng,
-        byte* out, word32* outSz, byte* key, word32 keySz, int algo, int iter,
-        char* pass, int passSz)
+static int wc_PKCS12_create_key_bag(_Ptr<WC_PKCS12> pkcs12, _Ptr<WC_RNG> rng, byte *out, _Ptr<word32> outSz, byte *key, word32 keySz, int algo, int iter, char *pass, int passSz)
 {
     void* heap;
     byte* tmp;
@@ -1589,8 +1578,7 @@ static int wc_PKCS12_create_key_bag(WC_PKCS12* pkcs12, WC_RNG* rng,
  *
  * returns the size of the cert bag on success
  */
-static int wc_PKCS12_create_cert_bag(WC_PKCS12* pkcs12,
-        byte* out, word32* outSz, byte* cert, word32 certSz)
+static int wc_PKCS12_create_cert_bag(_Ptr<WC_PKCS12> pkcs12, byte *out, _Ptr<word32> outSz, byte *cert, word32 certSz)
 {
     word32 length = 0;
     word32 idx = 0;
@@ -1697,9 +1685,7 @@ static int wc_PKCS12_create_cert_bag(WC_PKCS12* pkcs12,
  *
  * returns the size of result on success
  */
-static int wc_PKCS12_encrypt_content(WC_PKCS12* pkcs12, WC_RNG* rng,
-        byte* out, word32* outSz, byte* content, word32 contentSz, int vAlgo,
-        const char* pass, int passSz, int iter, int type)
+static int wc_PKCS12_encrypt_content(_Ptr<WC_PKCS12> pkcs12, _Ptr<WC_RNG> rng, byte *out, _Ptr<word32> outSz, byte *content, word32 contentSz, int vAlgo, const char *pass, int passSz, int iter, int type)
 {
     void* heap;
     int vPKCS     = 1; /* PKCS#12 is always set to 1 */
@@ -1878,9 +1864,7 @@ static int wc_PKCS12_encrypt_content(WC_PKCS12* pkcs12, WC_RNG* rng,
 /* helper function to create the PKCS12 key content
  * keyCiSz is output buffer size
  * returns a pointer to be free'd by caller on success and NULL on failure */
-static byte* PKCS12_create_key_content(WC_PKCS12* pkcs12, int nidKey,
-        word32* keyCiSz, WC_RNG* rng, char* pass, word32 passSz,
-        byte* key, word32 keySz, int iter)
+static byte * PKCS12_create_key_content(WC_PKCS12 *pkcs12 : itype(_Ptr<WC_PKCS12>), int nidKey, _Ptr<word32> keyCiSz, _Ptr<WC_RNG> rng, char *pass, word32 passSz, byte *key, word32 keySz, int iter)
 {
     byte*  keyBuf;
     word32 keyBufSz = 0;
@@ -1994,9 +1978,7 @@ static byte* PKCS12_create_key_content(WC_PKCS12* pkcs12, int nidKey,
 /* helper function to create the PKCS12 certificate content
  * certCiSz is output buffer size
  * returns a pointer to be free'd by caller on success and NULL on failure */
-static byte* PKCS12_create_cert_content(WC_PKCS12* pkcs12, int nidCert,
-        WC_DerCertList* ca, byte* cert, word32 certSz, word32* certCiSz,
-        WC_RNG* rng, char* pass, word32 passSz, int iter)
+static byte * PKCS12_create_cert_content(WC_PKCS12 *pkcs12 : itype(_Ptr<WC_PKCS12>), int nidCert, WC_DerCertList *ca, byte *cert, word32 certSz, _Ptr<word32> certCiSz, _Ptr<WC_RNG> rng, char *pass, word32 passSz, int iter)
 {
     int algo;
     int ret;
@@ -2141,9 +2123,7 @@ static byte* PKCS12_create_cert_content(WC_PKCS12* pkcs12, int nidCert,
 
 /* helper function to create the PKCS12 safe
  * returns 0 on success */
-static int PKCS12_create_safe(WC_PKCS12* pkcs12, byte* certCi, word32 certCiSz,
-        byte* keyCi, word32 keyCiSz, WC_RNG* rng, char* pass, word32 passSz,
-        int iter)
+static int PKCS12_create_safe(WC_PKCS12 *pkcs12 : itype(_Ptr<WC_PKCS12>), byte *certCi, word32 certCiSz, byte *keyCi, word32 keyCiSz, _Ptr<WC_RNG> rng, char *pass, word32 passSz, int iter)
 {
     int length;
     int ret;
@@ -2227,9 +2207,7 @@ static int PKCS12_create_safe(WC_PKCS12* pkcs12, byte* certCi, word32 certCiSz,
  *
  * returns a pointer to a new WC_PKCS12 structure on success and NULL if failed
  */
-WC_PKCS12* wc_PKCS12_create(char* pass, word32 passSz, char* name,
-        byte* key, word32 keySz, byte* cert, word32 certSz, WC_DerCertList* ca,
-        int nidKey, int nidCert, int iter, int macIter, int keyType, void* heap)
+WC_PKCS12 * wc_PKCS12_create(char *pass, word32 passSz, _Ptr<char> name, byte *key, word32 keySz, byte *cert, word32 certSz, WC_DerCertList *ca, int nidKey, int nidCert, int iter, int macIter, int keyType, void *heap)
 {
     WC_PKCS12* pkcs12;
     WC_RNG     rng;
@@ -2377,7 +2355,7 @@ WC_PKCS12* wc_PKCS12_create(char* pass, word32 passSz, char* name,
 
 
 /* if using a specific memory heap */
-int wc_PKCS12_SetHeap(WC_PKCS12* pkcs12, void* heap)
+int wc_PKCS12_SetHeap(WC_PKCS12 *pkcs12 : itype(_Ptr<WC_PKCS12>), void *heap)
 {
     if (pkcs12 == NULL) {
         return BAD_FUNC_ARG;
@@ -2389,7 +2367,7 @@ int wc_PKCS12_SetHeap(WC_PKCS12* pkcs12, void* heap)
 
 
 /* getter for heap */
-void* wc_PKCS12_GetHeap(WC_PKCS12* pkcs12)
+void * wc_PKCS12_GetHeap(_Ptr<WC_PKCS12> pkcs12)
 {
     if (pkcs12 == NULL) {
         return NULL;

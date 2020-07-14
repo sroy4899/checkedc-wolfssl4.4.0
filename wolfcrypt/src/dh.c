@@ -921,7 +921,7 @@ const DhParams* wc_Dh_ffdhe8192_Get(void)
 }
 #endif
 
-int wc_InitDhKey_ex(DhKey* key, void* heap, int devId)
+int wc_InitDhKey_ex(_Ptr<DhKey> key, void *heap, int devId)
 {
     int ret = 0;
 
@@ -948,13 +948,13 @@ int wc_InitDhKey_ex(DhKey* key, void* heap, int devId)
     return ret;
 }
 
-int wc_InitDhKey(DhKey* key)
+int wc_InitDhKey(_Ptr<DhKey> key)
 {
     return wc_InitDhKey_ex(key, NULL, INVALID_DEVID);
 }
 
 
-int wc_FreeDhKey(DhKey* key)
+int wc_FreeDhKey(_Ptr<DhKey> key)
 {
     if (key) {
         mp_clear(&key->p);
@@ -1039,8 +1039,7 @@ static int CheckDhLN(int modLen, int divLen)
  * privSz - IN/OUT, size of priv buffer, size of generated private key
  *
  * return 0 on success, negative on error */
-static int GeneratePrivateDh186(DhKey* key, WC_RNG* rng, byte* priv,
-                                word32* privSz)
+static int GeneratePrivateDh186(_Ptr<DhKey> key, _Ptr<WC_RNG> rng, byte *priv, _Ptr<word32> privSz)
 {
     byte* cBuf;
     int qSz, pSz, cSz, err;
@@ -1160,8 +1159,7 @@ static int GeneratePrivateDh186(DhKey* key, WC_RNG* rng, byte* priv,
 #endif /* WOLFSSL_NO_DH186 */
 #endif /* !WC_NO_RNG */
 
-static int GeneratePrivateDh(DhKey* key, WC_RNG* rng, byte* priv,
-                             word32* privSz)
+static int GeneratePrivateDh(_Ptr<DhKey> key, _Ptr<WC_RNG> rng, byte *priv, _Ptr<word32> privSz)
 {
 #ifndef WC_NO_RNG
     int ret = 0;
@@ -1225,8 +1223,7 @@ static int GeneratePrivateDh(DhKey* key, WC_RNG* rng, byte* priv,
 }
 
 
-static int GeneratePublicDh(DhKey* key, byte* priv, word32 privSz,
-    byte* pub, word32* pubSz)
+static int GeneratePublicDh(_Ptr<DhKey> key, byte *priv, word32 privSz, byte *pub, _Ptr<word32> pubSz)
 {
     int ret = 0;
 #ifndef WOLFSSL_SP_MATH
@@ -1298,8 +1295,7 @@ static int GeneratePublicDh(DhKey* key, byte* priv, word32 privSz,
     return ret;
 }
 
-static int wc_DhGenerateKeyPair_Sync(DhKey* key, WC_RNG* rng,
-    byte* priv, word32* privSz, byte* pub, word32* pubSz)
+static int wc_DhGenerateKeyPair_Sync(_Ptr<DhKey> key, _Ptr<WC_RNG> rng, byte *priv, _Ptr<word32> privSz, byte *pub, _Ptr<word32> pubSz)
 {
     int ret;
 
@@ -1385,8 +1381,7 @@ static int wc_DhGenerateKeyPair_Async(DhKey* key, WC_RNG* rng,
  *
  *  returns 0 on success or error code
  */
-int wc_DhCheckPubKey_ex(DhKey* key, const byte* pub, word32 pubSz,
-                        const byte* prime, word32 primeSz)
+int wc_DhCheckPubKey_ex(_Ptr<DhKey> key, const byte *pub, word32 pubSz, const byte *prime, word32 primeSz)
 {
     int ret = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -1532,7 +1527,7 @@ int wc_DhCheckPubKey_ex(DhKey* key, const byte* pub, word32 pubSz,
  *
  *  returns 0 on success or error code
  */
-int wc_DhCheckPubKey(DhKey* key, const byte* pub, word32 pubSz)
+int wc_DhCheckPubKey(_Ptr<DhKey> key, const byte *pub, word32 pubSz)
 {
     return wc_DhCheckPubKey_ex(key, pub, pubSz, NULL, 0);
 }
@@ -1550,8 +1545,7 @@ int wc_DhCheckPubKey(DhKey* key, const byte* pub, word32 pubSz)
  * pub      Big-endian encoding of public key in bytes.
  * pubSz    Size of public key in bytes.
  */
-int wc_DhCheckPubValue(const byte* prime, word32 primeSz, const byte* pub,
-                       word32 pubSz)
+int wc_DhCheckPubValue(const byte *prime, word32 primeSz, const byte *pub, word32 pubSz)
 {
     int ret = 0;
     word32 i;
@@ -1590,8 +1584,7 @@ int wc_DhCheckPubValue(const byte* prime, word32 primeSz, const byte* pub,
  *
  *  returns 0 on success or error code
  */
-int wc_DhCheckPrivKey_ex(DhKey* key, const byte* priv, word32 privSz,
-                         const byte* prime, word32 primeSz)
+int wc_DhCheckPrivKey_ex(_Ptr<DhKey> key, const byte *priv, word32 privSz, const byte *prime, word32 primeSz)
 {
     int ret = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -1684,7 +1677,7 @@ int wc_DhCheckPrivKey_ex(DhKey* key, const byte* priv, word32 privSz,
  *
  *  returns 0 on success or error code
  */
-int wc_DhCheckPrivKey(DhKey* key, const byte* priv, word32 privSz)
+int wc_DhCheckPrivKey(_Ptr<DhKey> key, const byte *priv, word32 privSz)
 {
     return wc_DhCheckPrivKey_ex(key, priv, privSz, NULL, 0);
 }
@@ -1701,8 +1694,7 @@ int wc_DhCheckPrivKey(DhKey* key, const byte* priv, word32 privSz)
  *
  *  returns 0 on success or error code
  */
-int wc_DhCheckKeyPair(DhKey* key, const byte* pub, word32 pubSz,
-                      const byte* priv, word32 privSz)
+int wc_DhCheckKeyPair(_Ptr<DhKey> key, const byte *pub, word32 pubSz, const byte *priv, word32 privSz)
 {
 #ifdef WOLFSSL_SMALL_STACK
     mp_int* publicKey = NULL;
@@ -1811,8 +1803,7 @@ int wc_DhCheckKeyPair(DhKey* key, const byte* pub, word32 pubSz,
 }
 
 
-int wc_DhGenerateKeyPair(DhKey* key, WC_RNG* rng,
-    byte* priv, word32* privSz, byte* pub, word32* pubSz)
+int wc_DhGenerateKeyPair(_Ptr<DhKey> key, _Ptr<WC_RNG> rng, byte *priv, _Ptr<word32> privSz, byte *pub, _Ptr<word32> pubSz)
 {
     int ret;
 
@@ -1835,8 +1826,7 @@ int wc_DhGenerateKeyPair(DhKey* key, WC_RNG* rng,
 }
 
 
-static int wc_DhAgree_Sync(DhKey* key, byte* agree, word32* agreeSz,
-    const byte* priv, word32 privSz, const byte* otherPub, word32 pubSz)
+static int wc_DhAgree_Sync(_Ptr<DhKey> key, byte *agree, _Ptr<word32> agreeSz, const byte *priv, word32 privSz, const byte *otherPub, word32 pubSz)
 {
     int ret = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -2042,8 +2032,7 @@ static int wc_DhAgree_Async(DhKey* key, byte* agree, word32* agreeSz,
 }
 #endif /* WOLFSSL_ASYNC_CRYPT */
 
-int wc_DhAgree(DhKey* key, byte* agree, word32* agreeSz, const byte* priv,
-            word32 privSz, const byte* otherPub, word32 pubSz)
+int wc_DhAgree(_Ptr<DhKey> key, byte *agree, _Ptr<word32> agreeSz, const byte *priv, word32 privSz, const byte *otherPub, word32 pubSz)
 {
     int ret = 0;
 
@@ -2136,13 +2125,11 @@ WOLFSSL_LOCAL int wc_DhSetFullKeys(DhKey* key,const byte* priv_key,word32 privSz
 }
 #endif
 
-static int _DhSetKey(DhKey* key, const byte* p, word32 pSz, const byte* g,
-                   word32 gSz, const byte* q, word32 qSz, int trusted,
-                   WC_RNG* rng)
+static int _DhSetKey(_Ptr<DhKey> key, const byte *p, word32 pSz, const byte *g, word32 gSz, const byte *q, word32 qSz, int trusted, _Ptr<WC_RNG> rng)
 {
     int ret = 0;
-    mp_int* keyP = NULL;
-    mp_int* keyG = NULL;
+    _Ptr<mp_int> keyP =  NULL;
+    _Ptr<mp_int> keyG =  NULL;
 
     if (key == NULL || p == NULL || g == NULL || pSz == 0 || gSz == 0) {
         ret = BAD_FUNC_ARG;
@@ -2215,24 +2202,20 @@ static int _DhSetKey(DhKey* key, const byte* p, word32 pSz, const byte* g,
 }
 
 
-int wc_DhSetCheckKey(DhKey* key, const byte* p, word32 pSz, const byte* g,
-                   word32 gSz, const byte* q, word32 qSz, int trusted,
-                   WC_RNG* rng)
+int wc_DhSetCheckKey(_Ptr<DhKey> key, const byte *p, word32 pSz, const byte *g, word32 gSz, const byte *q, word32 qSz, int trusted, _Ptr<WC_RNG> rng)
 {
     return _DhSetKey(key, p, pSz, g, gSz, q, qSz, trusted, rng);
 }
 
 
-int wc_DhSetKey_ex(DhKey* key, const byte* p, word32 pSz, const byte* g,
-                   word32 gSz, const byte* q, word32 qSz)
+int wc_DhSetKey_ex(_Ptr<DhKey> key, const byte *p, word32 pSz, const byte *g, word32 gSz, const byte *q, word32 qSz)
 {
     return _DhSetKey(key, p, pSz, g, gSz, q, qSz, 1, NULL);
 }
 
 
 /* not in asn anymore since no actual asn types used */
-int wc_DhSetKey(DhKey* key, const byte* p, word32 pSz, const byte* g,
-                word32 gSz)
+int wc_DhSetKey(_Ptr<DhKey> key, const byte *p, word32 pSz, const byte *g, word32 gSz)
 {
     return _DhSetKey(key, p, pSz, g, gSz, NULL, 0, 1, NULL);
 }

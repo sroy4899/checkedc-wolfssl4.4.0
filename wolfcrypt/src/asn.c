@@ -151,16 +151,14 @@ int tsip_tls_CertVerify(const byte *cert, word32 certSz,
                         word32 key_e_start, word32 key_e_len,
                         byte *tsip_encRsaKeyIdx);
 #endif
-int GetLength(const byte* input, word32* inOutIdx, int* len,
-                           word32 maxIdx)
+int GetLength(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx)
 {
     return GetLength_ex(input, inOutIdx, len, maxIdx, 1);
 }
 
 
 /* give option to check length value found against index. 1 to check 0 to not */
-int GetLength_ex(const byte* input, word32* inOutIdx, int* len,
-                           word32 maxIdx, int check)
+int GetLength_ex(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx, int check)
 {
     int     length = 0;
     word32  idx = *inOutIdx;
@@ -216,7 +214,7 @@ int GetLength_ex(const byte* input, word32* inOutIdx, int* len,
  *
  * returns 0 on success
  */
-int GetASNTag(const byte* input, word32* inOutIdx, byte* tag, word32 maxIdx)
+int GetASNTag(const byte *input, _Ptr<word32> inOutIdx, _Ptr<byte> tag, word32 maxIdx)
 {
     word32 idx;
 
@@ -236,8 +234,7 @@ int GetASNTag(const byte* input, word32* inOutIdx, byte* tag, word32 maxIdx)
 }
 
 
-static int GetASNHeader_ex(const byte* input, byte tag, word32* inOutIdx, int* len,
-                        word32 maxIdx, int check)
+static int GetASNHeader_ex(const byte *input, byte tag, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx, int check)
 {
     word32 idx = *inOutIdx;
     byte   tagFound;
@@ -269,14 +266,12 @@ static int GetASNHeader_ex(const byte* input, byte tag, word32* inOutIdx, int* l
  *         ASN_PARSE_E when the expected tag is not found or length is invalid.
  *         Otherwise, the number of bytes in the ASN.1 data.
  */
-static int GetASNHeader(const byte* input, byte tag, word32* inOutIdx, int* len,
-                        word32 maxIdx)
+static int GetASNHeader(const byte *input, byte tag, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx)
 {
     return GetASNHeader_ex(input, tag, inOutIdx, len, maxIdx, 1);
 }
 
-static int GetHeader(const byte* input, byte* tag, word32* inOutIdx, int* len,
-                     word32 maxIdx, int check)
+static int GetHeader(const byte *input, _Ptr<byte> tag, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx, int check)
 {
     word32 idx = *inOutIdx;
     int    length;
@@ -294,32 +289,28 @@ static int GetHeader(const byte* input, byte* tag, word32* inOutIdx, int* len,
     return length;
 }
 
-int GetSequence(const byte* input, word32* inOutIdx, int* len,
-                           word32 maxIdx)
+int GetSequence(const byte *input, word32 *inOutIdx : itype(_Ptr<word32>), _Ptr<int> len, word32 maxIdx)
 {
     return GetASNHeader(input, ASN_SEQUENCE | ASN_CONSTRUCTED, inOutIdx, len,
                         maxIdx);
 }
 
 
-int GetSequence_ex(const byte* input, word32* inOutIdx, int* len,
-                           word32 maxIdx, int check)
+int GetSequence_ex(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx, int check)
 {
     return GetASNHeader_ex(input, ASN_SEQUENCE | ASN_CONSTRUCTED, inOutIdx, len,
                         maxIdx, check);
 }
 
 
-int GetSet(const byte* input, word32* inOutIdx, int* len,
-                        word32 maxIdx)
+int GetSet(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx)
 {
     return GetASNHeader(input, ASN_SET | ASN_CONSTRUCTED, inOutIdx, len,
                         maxIdx);
 }
 
 
-int GetSet_ex(const byte* input, word32* inOutIdx, int* len,
-                        word32 maxIdx, int check)
+int GetSet_ex(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx, int check)
 {
     return GetASNHeader_ex(input, ASN_SET | ASN_CONSTRUCTED, inOutIdx, len,
                         maxIdx, check);
@@ -336,7 +327,7 @@ int GetSet_ex(const byte* input, word32* inOutIdx, int* len,
  *         ASN_EXPECT_0_E when the length is not zero.
  *         Otherwise, 0 to indicate success.
  */
-static int GetASNNull(const byte* input, word32* inOutIdx, word32 maxIdx)
+static int GetASNNull(const byte *input, _Ptr<word32> inOutIdx, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     byte   b;
@@ -360,7 +351,7 @@ static int GetASNNull(const byte* input, word32* inOutIdx, word32 maxIdx)
  * output  Buffer to write into.
  * returns the number of bytes added to the buffer.
  */
-static int SetASNNull(byte* output)
+static int SetASNNull(byte *output)
 {
     output[0] = ASN_TAG_NULL;
     output[1] = 0;
@@ -377,7 +368,7 @@ static int SetASNNull(byte* output)
  *         ASN_PARSE_E when the BOOLEAN tag is not found or length is not 1.
  *         Otherwise, 0 to indicate the value was false and 1 to indicate true.
  */
-static int GetBoolean(const byte* input, word32* inOutIdx, word32 maxIdx)
+static int GetBoolean(const byte *input, _Ptr<word32> inOutIdx, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     byte   b;
@@ -427,8 +418,7 @@ static int SetBoolean(int val, byte* output)
  *         invalid.
  *         Otherwise, the number of bytes in the ASN.1 data.
  */
-int GetOctetString(const byte* input, word32* inOutIdx, int* len,
-                          word32 maxIdx)
+int GetOctetString(const byte *input, word32 *inOutIdx : itype(_Ptr<word32>), _Ptr<int> len, word32 maxIdx)
 {
     return GetASNHeader(input, ASN_OCTET_STRING, inOutIdx, len, maxIdx);
 }
@@ -445,8 +435,7 @@ int GetOctetString(const byte* input, word32* inOutIdx, int* len,
  *         or invalid use of or missing leading zero.
  *         Otherwise, 0 to indicate success.
  */
-static int GetASNInt(const byte* input, word32* inOutIdx, int* len,
-                     word32 maxIdx)
+static int GetASNInt(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx)
 {
     int    ret;
 
@@ -478,7 +467,7 @@ static int GetASNInt(const byte* input, word32* inOutIdx, int* len,
  *         ASN_PARSE_E when the INTEGER tag is not found or length is invalid.
  *         Otherwise, the 7-bit value.
  */
-static int GetInteger7Bit(const byte* input, word32* inOutIdx, word32 maxIdx)
+static int GetInteger7Bit(const byte *input, _Ptr<word32> inOutIdx, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     byte   b;
@@ -549,7 +538,7 @@ static const char sigUnknownName[] = "Unknown";
  *
  * oid  Oid value for signature
  */
-const char* GetSigName(int oid) {
+const char * GetSigName(int oid) {
     switch (oid) {
     #if !defined(NO_DSA) && !defined(NO_SHA)
         case CTC_SHAwDSA:
@@ -624,7 +613,7 @@ const char* GetSigName(int oid) {
  * output     Buffer to write into.
  * returns the number of bytes added to the buffer.
  */
-static int SetASNInt(int len, byte firstByte, byte* output)
+static int SetASNInt(int len, byte firstByte, byte *output)
 {
     word32 idx = 0;
 
@@ -658,7 +647,7 @@ static int SetASNInt(int len, byte firstByte, byte* output)
  *         MP_TO_E when encoding the integer fails.
  *         Otherwise, the number of bytes added to the buffer.
  */
-static int SetASNIntMP(mp_int* n, int maxSz, byte* output)
+static int SetASNIntMP(_Ptr<mp_int> n, int maxSz, byte *output)
 {
     int idx = 0;
     int leadingBit;
@@ -719,8 +708,7 @@ static int SetASNIntRSA(void* n, byte* output)
 #endif /* !NO_RSA && HAVE_USER_RSA && WOLFSSL_CERT_GEN */
 
 /* Windows header clash for WinCE using GetVersion */
-int GetMyVersion(const byte* input, word32* inOutIdx,
-                               int* version, word32 maxIdx)
+int GetMyVersion(const byte *input, word32 *inOutIdx : itype(_Ptr<word32>), _Ptr<int> version, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     byte   tag;
@@ -746,7 +734,7 @@ int GetMyVersion(const byte* input, word32* inOutIdx,
 
 #ifndef NO_PWDBASED
 /* Get small count integer, 32 bits or less */
-int GetShortInt(const byte* input, word32* inOutIdx, int* number, word32 maxIdx)
+int GetShortInt(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> number, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     word32 len;
@@ -783,7 +771,7 @@ int GetShortInt(const byte* input, word32* inOutIdx, int* number, word32 maxIdx)
 
 /* Set small integer, 32 bits or less. DER encoding with no leading 0s
  * returns total amount written including ASN tag and length byte on success */
-int SetShortInt(byte* input, word32* inOutIdx, word32 number, word32 maxIdx)
+int SetShortInt(byte *input, _Ptr<word32> inOutIdx, word32 number, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     word32 len = 0;
@@ -827,8 +815,7 @@ int SetShortInt(byte* input, word32* inOutIdx, word32 number, word32 maxIdx)
 #endif /* !NO_PWDBASED */
 
 /* May not have one, not an error */
-static int GetExplicitVersion(const byte* input, word32* inOutIdx, int* version,
-                              word32 maxIdx)
+static int GetExplicitVersion(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> version, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     byte tag;
@@ -849,7 +836,7 @@ static int GetExplicitVersion(const byte* input, word32* inOutIdx, int* version,
     return 0;
 }
 
-int GetInt(mp_int* mpi, const byte* input, word32* inOutIdx, word32 maxIdx)
+int GetInt(_Ptr<mp_int> mpi, const byte *input, word32 *inOutIdx : itype(_Ptr<word32>), word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     int    ret;
@@ -899,8 +886,7 @@ static int SkipInt(const byte* input, word32* inOutIdx, word32 maxIdx)
 #endif
 #endif
 
-static int CheckBitString(const byte* input, word32* inOutIdx, int* len,
-                          word32 maxIdx, int zeroBits, byte* unusedBits)
+static int CheckBitString(const byte *input, word32 *inOutIdx : itype(_Ptr<word32>), _Ptr<int> len, word32 maxIdx, int zeroBits, _Ptr<byte> unusedBits)
 {
     word32 idx = *inOutIdx;
     int    length;
@@ -1663,7 +1649,7 @@ static const byte dnsSRVOid[] = {43, 6, 1, 5, 5, 7, 8, 7};
 
 
 /* returns a pointer to the OID string on success and NULL on fail */
-const byte* OidFromId(word32 id, word32 type, word32* oidSz)
+const byte * OidFromId(word32 id, word32 type, _Ptr<word32> oidSz)
 {
     const byte* oid = NULL;
 
@@ -2387,8 +2373,7 @@ int DecodeObjectId(const byte* in, word32 inSz, word16* out, word32* outSz)
  *         ASN_PARSE_E when length is invalid.
  *         Otherwise, 0 to indicate success.
  */
-int GetASNObjectId(const byte* input, word32* inOutIdx, int* len,
-                          word32 maxIdx)
+int GetASNObjectId(const byte *input, _Ptr<word32> inOutIdx, _Ptr<int> len, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     int    length;
@@ -2417,7 +2402,7 @@ int GetASNObjectId(const byte* input, word32* inOutIdx, int* len,
  * output      Buffer to write into.
  * returns the number of bytes added to the buffer.
  */
-int SetObjectId(int len, byte* output)
+int SetObjectId(int len, byte *output)
 {
     int idx = 0;
 
@@ -2427,8 +2412,7 @@ int SetObjectId(int len, byte* output)
     return idx;
 }
 
-int GetObjectId(const byte* input, word32* inOutIdx, word32* oid,
-                                  word32 oidType, word32 maxIdx)
+int GetObjectId(const byte *input, word32 *inOutIdx : itype(_Ptr<word32>), _Ptr<word32> oid, word32 oidType, word32 maxIdx)
 {
     int    ret = 0, length;
     word32 idx = *inOutIdx;
@@ -2510,7 +2494,7 @@ int GetObjectId(const byte* input, word32* inOutIdx, word32* oid,
     return ret;
 }
 
-static int SkipObjectId(const byte* input, word32* inOutIdx, word32 maxIdx)
+static int SkipObjectId(const byte *input, _Ptr<word32> inOutIdx, word32 maxIdx)
 {
     word32 idx = *inOutIdx;
     int    length;
@@ -2526,8 +2510,7 @@ static int SkipObjectId(const byte* input, word32* inOutIdx, word32 maxIdx)
     return 0;
 }
 
-int GetAlgoId(const byte* input, word32* inOutIdx, word32* oid,
-                     word32 oidType, word32 maxIdx)
+int GetAlgoId(const byte *input, _Ptr<word32> inOutIdx, _Ptr<word32> oid, word32 oidType, word32 maxIdx)
 {
     int    length;
     word32 idx = *inOutIdx;
@@ -2564,8 +2547,7 @@ int GetAlgoId(const byte* input, word32* inOutIdx, word32* oid,
 #ifndef NO_RSA
 
 #ifndef HAVE_USER_RSA
-int wc_RsaPrivateKeyDecode(const byte* input, word32* inOutIdx, RsaKey* key,
-                        word32 inSz)
+int wc_RsaPrivateKeyDecode(const byte *input, _Ptr<word32> inOutIdx, RsaKey *key : itype(_Ptr<RsaKey>), word32 inSz)
 {
     int version, length;
 
@@ -2619,8 +2601,7 @@ int wc_RsaPrivateKeyDecode(const byte* input, word32* inOutIdx, RsaKey* key,
 
 /* Remove PKCS8 header, place inOutIdx at beginning of traditional,
  * return traditional length on success, negative on error */
-int ToTraditionalInline_ex(const byte* input, word32* inOutIdx, word32 sz,
-                           word32* algId)
+int ToTraditionalInline_ex(const byte *input, _Ptr<word32> inOutIdx, word32 sz, _Ptr<word32> algId)
 {
     word32 idx;
     int    version, length;
@@ -2663,7 +2644,7 @@ int ToTraditionalInline_ex(const byte* input, word32* inOutIdx, word32 sz,
     return length;
 }
 
-int ToTraditionalInline(const byte* input, word32* inOutIdx, word32 sz)
+int ToTraditionalInline(const byte *input, _Ptr<word32> inOutIdx, word32 sz)
 {
     word32 oid;
 
@@ -2671,7 +2652,7 @@ int ToTraditionalInline(const byte* input, word32* inOutIdx, word32 sz)
 }
 
 /* Remove PKCS8 header, move beginning of traditional to beginning of input */
-int ToTraditional_ex(byte* input, word32 sz, word32* algId)
+int ToTraditional_ex(byte *input, word32 sz, _Ptr<word32> algId)
 {
     word32 inOutIdx = 0;
     int    length;
@@ -2688,7 +2669,7 @@ int ToTraditional_ex(byte* input, word32 sz, word32* algId)
     return length;
 }
 
-int ToTraditional(byte* input, word32 sz)
+int ToTraditional(byte *input, word32 sz)
 {
     word32 oid;
 
@@ -2703,7 +2684,7 @@ int ToTraditional(byte* input, word32 sz)
  * return traditional length on success, with inOutIdx at beginning of
  * traditional
  * return negative on failure/error */
-int wc_GetPkcs8TraditionalOffset(byte* input, word32* inOutIdx, word32 sz)
+int wc_GetPkcs8TraditionalOffset(byte *input, _Ptr<word32> inOutIdx, word32 sz)
 {
     int length;
     word32 algId;
@@ -2743,8 +2724,7 @@ int wc_GetPkcs8TraditionalOffset(byte* input, word32* inOutIdx, word32 sz)
  * Returns the size of PKCS#8 placed into out. In error cases returns negative
  * values.
  */
-int wc_CreatePKCS8Key(byte* out, word32* outSz, byte* key, word32 keySz,
-        int algoID, const byte* curveOID, word32 oidSz)
+int wc_CreatePKCS8Key(byte *out, _Ptr<word32> outSz, byte *key, word32 keySz, int algoID, const byte *curveOID, word32 oidSz)
 {
         word32 keyIdx = 0;
         word32 tmpSz  = 0;
@@ -2837,7 +2817,7 @@ int wc_CreatePKCS8Key(byte* out, word32* outSz, byte* key, word32 keySz,
  * key   : buffer holding DER format key
  * keySz : size of key buffer
  * der   : a initialized and parsed DecodedCert holding a certificate */
-int wc_CheckPrivateKey(byte* key, word32 keySz, DecodedCert* der)
+int wc_CheckPrivateKey(byte *key, word32 keySz, _Ptr<DecodedCert> der)
 {
     int ret;
     (void)keySz;
@@ -3082,7 +3062,7 @@ int wc_CheckPrivateKey(byte* key, word32 keySz, DecodedCert* der)
 #if defined(HAVE_PKCS8) || defined(HAVE_PKCS12)
 /* Check To see if PKCS version algo is supported, set id if it is return 0
    < 0 on error */
-static int CheckAlgo(int first, int second, int* id, int* version, int* blockSz)
+static int CheckAlgo(int first, int second, _Ptr<int> id, _Ptr<int> version, _Ptr<int> blockSz)
 {
     *id      = ALGO_ID_E;
     *version = PKCS5;   /* default */
@@ -3146,7 +3126,7 @@ static int CheckAlgo(int first, int second, int* id, int* version, int* blockSz)
 
 /* Check To see if PKCS v2 algo is supported, set id if it is return 0
    < 0 on error */
-static int CheckAlgoV2(int oid, int* id, int* blockSz)
+static int CheckAlgoV2(int oid, _Ptr<int> id, _Ptr<int> blockSz)
 {
     if (blockSz) *blockSz = 8; /* default */
     (void)id; /* not used if AES and DES3 disabled */
@@ -3184,8 +3164,7 @@ static int CheckAlgoV2(int oid, int* id, int* blockSz)
 
 #ifdef HAVE_PKCS8
 
-int wc_GetKeyOID(byte* key, word32 keySz, const byte** curveOID, word32* oidSz,
-        int* algoID, void* heap)
+int wc_GetKeyOID(byte *key, word32 keySz, _Ptr<const byte*> curveOID, _Ptr<word32> oidSz, _Ptr<int> algoID, void *heap)
 {
     word32 tmpIdx = 0;
 
@@ -3291,7 +3270,7 @@ int wc_GetKeyOID(byte* key, word32 keySz, const byte** curveOID, word32* oidSz,
 #if defined(HAVE_PKCS8) || defined(HAVE_PKCS12)
 
 #define PKCS8_MIN_BLOCK_SIZE 8
-static int Pkcs8Pad(byte* buf, int sz, int blockSz)
+static int Pkcs8Pad(byte *buf, int sz, int blockSz)
 {
     int i, padSz;
 
@@ -3322,9 +3301,7 @@ static int Pkcs8Pad(byte* buf, int sz, int blockSz)
  *
  * returns the size of encrypted data on success
  */
-int UnTraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
-        const char* password, int passwordSz, int vPKCS, int vAlgo,
-        byte* salt, word32 saltSz, int itt, WC_RNG* rng, void* heap)
+int UnTraditionalEnc(byte *key, word32 keySz, byte *out, _Ptr<word32> outSz, const char *password, int passwordSz, int vPKCS, int vAlgo, byte *salt, word32 saltSz, int itt, _Ptr<WC_RNG> rng, void *heap)
 {
     int algoID = 0;
     byte*  tmp;
@@ -3425,7 +3402,7 @@ int UnTraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
     }
 
     /* check key type and get OID if ECC */
-    if ((ret = wc_GetKeyOID(key, keySz, &curveOID, &oidSz, &algoID, heap))< 0) {
+    if ((ret = wc_GetKeyOID(key, keySz, ((const byte **)&curveOID), &oidSz, &algoID, heap))< 0) {
         WOLFSSL_MSG("Error getting key OID");
         return ret;
     }
@@ -3533,8 +3510,7 @@ int UnTraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
     return totalSz + sz;
 }
 
-static int GetAlgoV2(int encAlgId, const byte** oid, int *len, int* id,
-                     int *blkSz)
+static int GetAlgoV2(int encAlgId, _Ptr<const byte*> oid, _Ptr<int> len, _Ptr<int> id, _Ptr<int> blkSz)
 {
     int ret = 0;
 
@@ -3575,10 +3551,7 @@ static int GetAlgoV2(int encAlgId, const byte** oid, int *len, int* id,
 /* Converts Encrypted PKCS#8 to 'traditional' (i.e. PKCS#8 removed from
  * decrypted key.)
  */
-int TraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
-        const char* password, int passwordSz, int vPKCS, int vAlgo,
-        int encAlgId, byte* salt, word32 saltSz, int itt, WC_RNG* rng,
-        void* heap)
+int TraditionalEnc(byte *key, word32 keySz, byte *out, _Ptr<word32> outSz, const char *password, int passwordSz, int vPKCS, int vAlgo, int encAlgId, byte *salt, word32 saltSz, int itt, _Ptr<WC_RNG> rng, void *heap)
 {
     int ret = 0;
     int version, blockSz, id;
@@ -3623,7 +3596,7 @@ int TraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
 
     if (ret == 0) {
         /* check key type and get OID if ECC */
-        ret = wc_GetKeyOID(key, keySz, &curveOid, &curveOidSz, &algId, heap);
+        ret = wc_GetKeyOID(key, keySz, ((const byte **)&curveOid), &curveOidSz, &algId, heap);
         if (ret == 1)
             ret = 0;
     }
@@ -3648,7 +3621,7 @@ int TraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
     }
 
     if (ret == 0 && version == PKCS5v2)
-        ret = GetAlgoV2(encAlgId, &encOid, &encOidSz, &id, &blockSz);
+        ret = GetAlgoV2(encAlgId, ((const byte **)&encOid), &encOidSz, &id, &blockSz);
 
     if (ret == 0) {
         padSz = (blockSz - (pkcs8KeySz & (blockSz - 1))) & (blockSz - 1);
@@ -3768,7 +3741,7 @@ int TraditionalEnc(byte* key, word32 keySz, byte* out, word32* outSz,
  *
  * returns the total size of decrypted content on success.
  */
-int DecryptContent(byte* input, word32 sz, const char* password, int passwordSz)
+int DecryptContent(byte *input, word32 sz, const char *password, int passwordSz)
 {
     word32 inOutIdx = 0, seqEnd, oid, shaOid = 0;
     int    ret = 0, first, second, length = 0, version, saltSz, id;
@@ -3928,8 +3901,7 @@ exit_dc:
 
 /* Remove Encrypted PKCS8 header, move beginning of traditional to beginning
    of input */
-int ToTraditionalEnc(byte* input, word32 sz,const char* password,
-                     int passwordSz, word32* algId)
+int ToTraditionalEnc(byte *input, word32 sz, const char *password, int passwordSz, _Ptr<word32> algId)
 {
     int ret, length;
     word32 inOutIdx = 0;
@@ -3977,9 +3949,7 @@ int ToTraditionalEnc(byte* input, word32 sz,const char* password,
  * data returned is :
  * [ seq - obj [ seq -salt,itt]] , construct with encrypted data
  */
-int EncryptContent(byte* input, word32 inputSz, byte* out, word32* outSz,
-        const char* password, int passwordSz, int vPKCS, int vAlgo,
-        byte* salt, word32 saltSz, int itt, WC_RNG* rng, void* heap)
+int EncryptContent(byte *input, word32 inputSz, byte *out, _Ptr<word32> outSz, const char *password, int passwordSz, int vPKCS, int vAlgo, byte *salt, word32 saltSz, int itt, _Ptr<WC_RNG> rng, void *heap)
 {
     word32 sz;
     word32 inOutIdx = 0;
@@ -4239,8 +4209,7 @@ static int RsaPublicKeyDecodeRawIndex(const byte* input, word32* inOutIdx,
 }
 #endif /* WOLFSSL_RENESAS_TSIP */
 
-int wc_RsaPublicKeyDecode_ex(const byte* input, word32* inOutIdx, word32 inSz,
-    const byte** n, word32* nSz, const byte** e, word32* eSz)
+int wc_RsaPublicKeyDecode_ex(const byte *input, _Ptr<word32> inOutIdx, word32 inSz, _Ptr<const byte*> n, _Ptr<word32> nSz, _Ptr<const byte*> e, _Ptr<word32> eSz)
 {
     int ret = 0;
     int length = 0;
@@ -4318,8 +4287,7 @@ int wc_RsaPublicKeyDecode_ex(const byte* input, word32* inOutIdx, word32 inSz,
     return ret;
 }
 
-int wc_RsaPublicKeyDecode(const byte* input, word32* inOutIdx, RsaKey* key,
-                       word32 inSz)
+int wc_RsaPublicKeyDecode(const byte *input, _Ptr<word32> inOutIdx, RsaKey *key : itype(_Ptr<RsaKey>), word32 inSz)
 {
     int ret;
     const byte *n = NULL, *e = NULL;
@@ -4328,7 +4296,7 @@ int wc_RsaPublicKeyDecode(const byte* input, word32* inOutIdx, RsaKey* key,
     if (key == NULL)
         return BAD_FUNC_ARG;
 
-    ret = wc_RsaPublicKeyDecode_ex(input, inOutIdx, inSz, &n, &nSz, &e, &eSz);
+    ret = wc_RsaPublicKeyDecode_ex(input, inOutIdx, inSz, ((const byte **)&n), &nSz, ((const byte **)&e), &eSz);
     if (ret == 0) {
         ret = wc_RsaPublicKeyDecodeRaw(n, nSz, e, eSz, key);
     }
@@ -4337,8 +4305,7 @@ int wc_RsaPublicKeyDecode(const byte* input, word32* inOutIdx, RsaKey* key,
 }
 
 /* import RSA public key elements (n, e) into RsaKey structure (key) */
-int wc_RsaPublicKeyDecodeRaw(const byte* n, word32 nSz, const byte* e,
-                             word32 eSz, RsaKey* key)
+int wc_RsaPublicKeyDecodeRaw(const byte *n, word32 nSz, const byte *e, word32 eSz, _Ptr<RsaKey> key)
 {
     if (n == NULL || e == NULL || key == NULL)
         return BAD_FUNC_ARG;
@@ -4390,7 +4357,7 @@ int wc_RsaPublicKeyDecodeRaw(const byte* n, word32 nSz, const byte* e,
 
 #ifndef NO_DH
 
-int wc_DhKeyDecode(const byte* input, word32* inOutIdx, DhKey* key, word32 inSz)
+int wc_DhKeyDecode(const byte *input, _Ptr<word32> inOutIdx, _Ptr<DhKey> key, word32 inSz)
 {
     int ret = 0;
     int length;
@@ -4469,8 +4436,7 @@ int wc_DhKeyDecode(const byte* input, word32* inOutIdx, DhKey* key, word32 inSz)
 }
 
 
-int wc_DhParamsLoad(const byte* input, word32 inSz, byte* p, word32* pInOutSz,
-                 byte* g, word32* gInOutSz)
+int wc_DhParamsLoad(const byte *input, word32 inSz, byte *p, _Ptr<word32> pInOutSz, byte *g, _Ptr<word32> gInOutSz)
 {
     word32 idx = 0;
     int    ret;
@@ -4511,8 +4477,7 @@ int wc_DhParamsLoad(const byte* input, word32 inSz, byte* p, word32* pInOutSz,
 
 #ifndef NO_DSA
 
-int DsaPublicKeyDecode(const byte* input, word32* inOutIdx, DsaKey* key,
-                        word32 inSz)
+int wc_DsaPublicKeyDecode(const byte *input, word32 *inOutIdx, DsaKey *key, word32 inSz)
 {
     int    length;
     int    ret = 0;
@@ -4560,8 +4525,7 @@ int DsaPublicKeyDecode(const byte* input, word32* inOutIdx, DsaKey* key,
 }
 
 
-int DsaPrivateKeyDecode(const byte* input, word32* inOutIdx, DsaKey* key,
-                        word32 inSz)
+int wc_DsaPrivateKeyDecode(const byte *input, word32 *inOutIdx, DsaKey *key, word32 inSz)
 {
     int    length, version, ret = 0, temp = 0;
 
@@ -4635,7 +4599,7 @@ int DsaPrivateKeyDecode(const byte* input, word32* inOutIdx, DsaKey* key,
     return 0;
 }
 
-static mp_int* GetDsaInt(DsaKey* key, int idx)
+static _Ptr<mp_int> GetDsaInt(_Ptr<DsaKey> key, int idx)
 {
     if (idx == 0)
         return &key->p;
@@ -4652,7 +4616,7 @@ static mp_int* GetDsaInt(DsaKey* key, int idx)
 }
 
 /* Release Tmp DSA resources */
-static WC_INLINE void FreeTmpDsas(byte** tmps, void* heap)
+static void FreeTmpDsas(byte **tmps, void *heap)
 {
     int i;
 
@@ -4855,7 +4819,7 @@ int wc_DsaKeyToPublicDer(DsaKey* key, byte* output, word32 inLen)
 
 /* Convert private DsaKey key to DER format, write to output (inLen),
    return bytes written */
-int wc_DsaKeyToDer(DsaKey* key, byte* output, word32 inLen)
+int wc_DsaKeyToDer(_Ptr<DsaKey> key, byte *output, word32 inLen)
 {
     word32 seqSz, verSz, rawLen, intTotalLen = 0;
     word32 sizes[DSA_INTS];
@@ -4876,7 +4840,7 @@ int wc_DsaKeyToDer(DsaKey* key, byte* output, word32 inLen)
 
     /* write all big ints from key to DER tmps */
     for (i = 0; i < DSA_INTS; i++) {
-        mp_int* keyInt = GetDsaInt(key, i);
+        _Ptr<mp_int> keyInt =  GetDsaInt(key, i);
 
         rawLen = mp_unsigned_bin_size(keyInt) + 1;
         tmps[i] = (byte*)XMALLOC(rawLen + MAX_SEQ_SZ, key->heap,
@@ -4926,8 +4890,7 @@ int wc_DsaKeyToDer(DsaKey* key, byte* output, word32 inLen)
 
 #endif /* NO_DSA */
 
-void InitDecodedCert(DecodedCert* cert,
-                     const byte* source, word32 inSz, void* heap)
+void InitDecodedCert(DecodedCert *cert, const byte *source, word32 inSz, void *heap)
 {
     if (cert != NULL) {
         XMEMSET(cert, 0, sizeof(DecodedCert));
@@ -4955,7 +4918,7 @@ void InitDecodedCert(DecodedCert* cert,
 }
 
 
-void FreeAltNames(DNS_entry* altNames, void* heap)
+void FreeAltNames(DNS_entry *altNames, void *heap)
 {
     (void)heap;
 
@@ -4970,7 +4933,7 @@ void FreeAltNames(DNS_entry* altNames, void* heap)
 
 #ifndef IGNORE_NAME_CONSTRAINTS
 
-void FreeNameSubtrees(Base_entry* names, void* heap)
+void FreeNameSubtrees(Base_entry *names, void *heap)
 {
     (void)heap;
 
@@ -4985,7 +4948,7 @@ void FreeNameSubtrees(Base_entry* names, void* heap)
 
 #endif /* IGNORE_NAME_CONSTRAINTS */
 
-void FreeDecodedCert(DecodedCert* cert)
+void FreeDecodedCert(_Ptr<DecodedCert> cert)
 {
     if (cert == NULL)
         return;
@@ -5023,7 +4986,7 @@ void FreeDecodedCert(DecodedCert* cert)
 #endif
 }
 
-static int GetCertHeader(DecodedCert* cert)
+static int GetCertHeader(_Ptr<DecodedCert> cert)
 {
     int ret = 0, len;
 
@@ -5054,7 +5017,7 @@ static int GetCertHeader(DecodedCert* cert)
 
 #if !defined(NO_RSA)
 /* Store Rsa Key, may save later, Dsa could use in future */
-static int StoreRsaKey(DecodedCert* cert, word32 bitStringEnd)
+static int StoreRsaKey(_Ptr<DecodedCert> cert, word32 bitStringEnd)
 {
     int    length;
     word32 recvd = cert->srcIdx;
@@ -5097,7 +5060,7 @@ static int StoreRsaKey(DecodedCert* cert, word32 bitStringEnd)
 
 #endif /* HAVE_ECC */
 
-static int GetKey(DecodedCert* cert)
+static int GetKey(_Ptr<DecodedCert> cert)
 {
     int length;
 #if !defined(NO_DSA) && defined(WOLFSSL_QT)
@@ -5480,7 +5443,7 @@ int wc_OBJ_sn2nid(const char *sn)
 #endif
 
 /* Routine for calculating hashId */
-int CalcHashId(const byte* data, word32 len, byte* hash)
+int CalcHashId(const byte *data, word32 len, byte *hash)
 {
     int ret;
 
@@ -5504,7 +5467,7 @@ int CalcHashId(const byte* data, word32 len, byte* hash)
 }
 
 /* process NAME, either issuer or subject */
-static int GetName(DecodedCert* cert, int nameType, int maxIdx)
+static int GetName(_Ptr<DecodedCert> cert, int nameType, int maxIdx)
 {
     int    length;  /* length of all distinguished names */
     int    dummy;
@@ -6096,7 +6059,7 @@ static int GetName(DecodedCert* cert, int nameType, int maxIdx)
 #ifndef NO_ASN_TIME
 
 /* two byte date/time, add to value */
-static WC_INLINE int GetTime(int* value, const byte* date, int* idx)
+static int GetTime(_Ptr<int> value, const byte *date, _Ptr<int> idx)
 {
     int i = *idx;
 
@@ -6113,8 +6076,7 @@ static WC_INLINE int GetTime(int* value, const byte* date, int* idx)
     return 0;
 }
 
-int ExtractDate(const unsigned char* date, unsigned char format,
-                                                  struct tm* certTime, int* idx)
+int ExtractDate(const unsigned char *date, unsigned char format, struct tm *certTime, _Ptr<int> idx)
 {
     XMEMSET(certTime, 0, sizeof(struct tm));
 
@@ -6282,7 +6244,7 @@ int GetAsnTimeString(void* currTime, byte* buf, word32 len)
 #if defined(USE_WOLF_VALIDDATE)
 
 /* to the second */
-int DateGreaterThan(const struct tm* a, const struct tm* b)
+int DateGreaterThan(const struct tm *a : itype(_Ptr<const struct tm>), _Ptr<const struct tm> b)
 {
     if (a->tm_year > b->tm_year)
         return 1;
@@ -6312,19 +6274,19 @@ int DateGreaterThan(const struct tm* a, const struct tm* b)
 }
 
 
-static WC_INLINE int DateLessThan(const struct tm* a, const struct tm* b)
+static int DateLessThan(const struct tm *a : itype(_Ptr<const struct tm>), _Ptr<const struct tm> b)
 {
     return DateGreaterThan(b,a);
 }
 
 /* like atoi but only use first byte */
 /* Make sure before and after dates are valid */
-int ValidateDate(const byte* date, byte format, int dateType)
+int ValidateDate(const byte *date, byte format, int dateType)
 {
     time_t ltime;
     struct tm  certTime;
     struct tm* localTime;
-    struct tm* tmpTime;
+    _Ptr<struct tm> tmpTime = ((void *)0);
     int    i = 0;
     int    timeDiff = 0 ;
     int    diffHH = 0 ; int diffMM = 0 ;
@@ -6397,7 +6359,7 @@ int ValidateDate(const byte* date, byte format, int dateType)
 }
 #endif /* USE_WOLF_VALIDDATE */
 
-int wc_GetTime(void* timePtr, word32 timeSize)
+int wc_GetTime(void *timePtr, word32 timeSize)
 {
     time_t* ltime = (time_t*)timePtr;
 
@@ -6418,8 +6380,7 @@ int wc_GetTime(void* timePtr, word32 timeSize)
 
 
 /* Get date buffer, format and length. Returns 0=success or error */
-static int GetDateInfo(const byte* source, word32* idx, const byte** pDate,
-                        byte* pFormat, int* pLength, word32 maxIdx)
+static int GetDateInfo(const byte *source, _Ptr<word32> idx, _Ptr<const byte*> pDate, _Ptr<byte> pFormat, _Ptr<int> pLength, word32 maxIdx)
 {
     int length;
     byte format;
@@ -6454,7 +6415,7 @@ static int GetDateInfo(const byte* source, word32* idx, const byte** pDate,
     return 0;
 }
 
-static int GetDate(DecodedCert* cert, int dateType, int verify, int maxIdx)
+static int GetDate(_Ptr<DecodedCert> cert, int dateType, int verify, int maxIdx)
 {
     int    ret, length;
     const byte *datePtr = NULL;
@@ -6468,7 +6429,7 @@ static int GetDate(DecodedCert* cert, int dateType, int verify, int maxIdx)
         cert->afterDate = &cert->source[cert->srcIdx];
     startIdx = cert->srcIdx;
 
-    ret = GetDateInfo(cert->source, &cert->srcIdx, &datePtr, &format,
+    ret = GetDateInfo(cert->source, &cert->srcIdx, ((const byte **)&datePtr), &format,
                       &length, maxIdx);
     if (ret < 0)
         return ret;
@@ -6496,7 +6457,7 @@ static int GetDate(DecodedCert* cert, int dateType, int verify, int maxIdx)
     return 0;
 }
 
-static int GetValidity(DecodedCert* cert, int verify, int maxIdx)
+static int GetValidity(_Ptr<DecodedCert> cert, int verify, int maxIdx)
 {
     int length;
     int badDate = 0;
@@ -6519,13 +6480,12 @@ static int GetValidity(DecodedCert* cert, int verify, int maxIdx)
 }
 
 
-int wc_GetDateInfo(const byte* certDate, int certDateSz, const byte** date,
-    byte* format, int* length)
+int wc_GetDateInfo(const byte *certDate, int certDateSz, _Ptr<const byte*> date, _Ptr<byte> format, _Ptr<int> length)
 {
     int ret;
     word32 idx = 0;
 
-    ret = GetDateInfo(certDate, &idx, date, format, length, certDateSz);
+    ret = GetDateInfo(certDate, &idx, ((const byte **)date), format, length, certDateSz);
     if (ret < 0)
         return ret;
 
@@ -6533,8 +6493,7 @@ int wc_GetDateInfo(const byte* certDate, int certDateSz, const byte** date,
 }
 
 #ifndef NO_ASN_TIME
-int wc_GetDateAsCalendarTime(const byte* date, int length, byte format,
-    struct tm* timearg)
+int wc_GetDateAsCalendarTime(const byte *date, int length, byte format, struct tm *timearg)
 {
     int idx = 0;
     (void)length;
@@ -6578,7 +6537,7 @@ int wc_GetCertDates(Cert* cert, struct tm* before, struct tm* after)
  *
  * returns a negative value on fail case
  */
-int wc_GetPubX509(DecodedCert* cert, int verify, int* badDate)
+int wc_GetPubX509(_Ptr<DecodedCert> cert, int verify, _Ptr<int> badDate)
 {
     int ret;
 
@@ -6612,7 +6571,7 @@ int wc_GetPubX509(DecodedCert* cert, int verify, int* badDate)
     return ret;
 }
 
-int DecodeToKey(DecodedCert* cert, int verify)
+int DecodeToKey(_Ptr<DecodedCert> cert, int verify)
 {
     int badDate = 0;
     int ret;
@@ -6636,7 +6595,7 @@ int DecodeToKey(DecodedCert* cert, int verify)
     return ret;
 }
 
-static int GetSignature(DecodedCert* cert)
+static int GetSignature(_Ptr<DecodedCert> cert)
 {
     int length;
     int ret;
@@ -6652,14 +6611,14 @@ static int GetSignature(DecodedCert* cert)
     return 0;
 }
 
-static word32 SetOctetString8Bit(word32 len, byte* output)
+static word32 SetOctetString8Bit(word32 len, byte *output)
 {
     output[0] = ASN_OCTET_STRING;
     output[1] = (byte)len;
     return 2;
 }
 
-static word32 SetDigest(const byte* digest, word32 digSz, byte* output)
+static word32 SetDigest(const byte *digest, word32 digSz, byte *output)
 {
     word32 idx = SetOctetString8Bit(digSz, output);
     XMEMCPY(&output[idx], digest, digSz);
@@ -6679,7 +6638,7 @@ static word32 BytePrecision(word32 value)
 }
 
 
-word32 SetLength(word32 length, byte* output)
+word32 SetLength(word32 length, byte *output)
 {
     word32 i = 0, j;
 
@@ -6703,27 +6662,27 @@ word32 SetLength(word32 length, byte* output)
     return i;
 }
 
-word32 SetSequence(word32 len, byte* output)
+word32 SetSequence(word32 len, byte *output)
 {
     if (output)
         output[0] = ASN_SEQUENCE | ASN_CONSTRUCTED;
     return SetLength(len, output ? output + 1 : NULL) + 1;
 }
 
-word32 SetOctetString(word32 len, byte* output)
+word32 SetOctetString(word32 len, byte *output)
 {
     output[0] = ASN_OCTET_STRING;
     return SetLength(len, output + 1) + 1;
 }
 
 /* Write a set header to output */
-word32 SetSet(word32 len, byte* output)
+word32 SetSet(word32 len, byte *output)
 {
     output[0] = ASN_SET | ASN_CONSTRUCTED;
     return SetLength(len, output + 1) + 1;
 }
 
-word32 SetImplicit(byte tag, byte number, word32 len, byte* output)
+word32 SetImplicit(byte tag, byte number, word32 len, byte *output)
 {
 
     output[0] = ((tag == ASN_SEQUENCE || tag == ASN_SET) ? ASN_CONSTRUCTED : 0)
@@ -6731,7 +6690,7 @@ word32 SetImplicit(byte tag, byte number, word32 len, byte* output)
     return SetLength(len, output + 1) + 1;
 }
 
-word32 SetExplicit(byte number, word32 len, byte* output)
+word32 SetExplicit(byte number, word32 len, byte *output)
 {
     output[0] = ASN_CONSTRUCTED | ASN_CONTEXT_SPECIFIC | number;
     return SetLength(len, output + 1) + 1;
@@ -6793,7 +6752,7 @@ static WC_INLINE int IsSigAlgoECDSA(int algoOID)
 }
 #endif
 
-word32 SetAlgoID(int algoOID, byte* output, int type, int curveSz)
+word32 SetAlgoID(int algoOID, byte *output, int type, int curveSz)
 {
     word32 tagSz, idSz, seqSz, algoSz = 0;
     const  byte* algoName = 0;
@@ -6849,8 +6808,7 @@ word32 SetAlgoID(int algoOID, byte* output, int type, int curveSz)
 }
 
 
-word32 wc_EncodeSignature(byte* out, const byte* digest, word32 digSz,
-                          int hashOID)
+word32 wc_EncodeSignature(byte *out, const byte *digest, word32 digSz, int hashOID)
 {
     byte digArray[MAX_ENCODED_DIG_SZ];
     byte algoArray[MAX_ALGO_SZ];
@@ -6884,7 +6842,7 @@ int wc_GetCTC_HashOID(int type)
     return ret;
 }
 
-void InitSignatureCtx(SignatureCtx* sigCtx, void* heap, int devId)
+void InitSignatureCtx(SignatureCtx *sigCtx, void *heap, int devId)
 {
     if (sigCtx) {
         XMEMSET(sigCtx, 0, sizeof(SignatureCtx));
@@ -6893,7 +6851,7 @@ void InitSignatureCtx(SignatureCtx* sigCtx, void* heap, int devId)
     }
 }
 
-void FreeSignatureCtx(SignatureCtx* sigCtx)
+void FreeSignatureCtx(_Ptr<SignatureCtx> sigCtx)
 {
     if (sigCtx == NULL)
         return;
@@ -6947,8 +6905,7 @@ void FreeSignatureCtx(SignatureCtx* sigCtx)
 }
 
 #ifndef NO_ASN_CRYPT
-static int HashForSignature(const byte* buf, word32 bufSz, word32 sigOID,
-                            byte* digest, int* typeH, int* digestSz, int verify)
+static int HashForSignature(const byte *buf, word32 bufSz, word32 sigOID, byte *digest, _Ptr<int> typeH, _Ptr<int> digestSz, int verify)
 {
     int ret = 0;
 
@@ -7045,10 +7002,7 @@ static int HashForSignature(const byte* buf, word32 bufSz, word32 sigOID,
 #endif /* !NO_ASN_CRYPT */
 
 /* Return codes: 0=Success, Negative (see error-crypt.h), ASN_SIG_CONFIRM_E */
-static int ConfirmSignature(SignatureCtx* sigCtx,
-    const byte* buf, word32 bufSz,
-    const byte* key, word32 keySz, word32 keyOID,
-    const byte* sig, word32 sigSz, word32 sigOID, byte* rsaKeyIdx)
+static int ConfirmSignature(_Ptr<SignatureCtx> sigCtx, const byte *buf, word32 bufSz, const byte *key, word32 keySz, word32 keyOID, const byte *sig, word32 sigSz, word32 sigOID, _Ptr<byte> rsaKeyIdx)
 {
     int ret = 0;
 #ifndef WOLFSSL_RENESAS_TSIP_TLS
@@ -7266,7 +7220,7 @@ static int ConfirmSignature(SignatureCtx* sigCtx,
                         } else
                     #endif
                         ret = wc_RsaSSL_VerifyInline(sigCtx->plain, sigSz,
-                                                 &sigCtx->out, sigCtx->key.rsa);
+                                                 ((byte **)&sigCtx->out), sigCtx->key.rsa);
                     }
                     break;
                 }
@@ -7438,8 +7392,7 @@ exit_cs:
 
 #ifndef IGNORE_NAME_CONSTRAINTS
 
-static int MatchBaseName(int type, const char* name, int nameSz,
-                         const char* base, int baseSz)
+static int MatchBaseName(int type, const char *name, int nameSz, const char *base, int baseSz)
 {
     if (base == NULL || baseSz <= 0 || name == NULL || nameSz <= 0 ||
             name[0] == '.' || nameSz < baseSz ||
@@ -7501,7 +7454,7 @@ static int MatchBaseName(int type, const char* name, int nameSz,
 }
 
 
-static int ConfirmNameConstraints(Signer* signer, DecodedCert* cert)
+static int ConfirmNameConstraints(Signer *signer : itype(_Ptr<Signer>), _Ptr<DecodedCert> cert)
 {
     if (signer == NULL || cert == NULL)
         return 0;
@@ -7623,7 +7576,7 @@ static int ConfirmNameConstraints(Signer* signer, DecodedCert* cert)
 
 #endif /* IGNORE_NAME_CONSTRAINTS */
 
-static int DecodeAltNames(const byte* input, int sz, DecodedCert* cert)
+static int DecodeAltNames(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0;
     int length = 0;
@@ -7935,7 +7888,7 @@ static int DecodeAltNames(const byte* input, int sz, DecodedCert* cert)
     return 0;
 }
 
-static int DecodeBasicCaConstraint(const byte* input, int sz, DecodedCert* cert)
+static int DecodeBasicCaConstraint(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0;
     int length = 0;
@@ -7993,7 +7946,7 @@ static int DecodeBasicCaConstraint(const byte* input, int sz, DecodedCert* cert)
 #define GENERALNAME_URI 6
     /* From RFC3280 SS4.2.1.7, GeneralName */
 
-static int DecodeCrlDist(const byte* input, int sz, DecodedCert* cert)
+static int DecodeCrlDist(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0, localIdx;
     int length = 0;
@@ -8085,7 +8038,7 @@ static int DecodeCrlDist(const byte* input, int sz, DecodedCert* cert)
 }
 
 
-static int DecodeAuthInfo(const byte* input, int sz, DecodedCert* cert)
+static int DecodeAuthInfo(const byte *input, int sz, _Ptr<DecodedCert> cert)
 /*
  *  Read Authority Information Access records. If there are
  *  any issues, return without saving the record.
@@ -8147,7 +8100,7 @@ static int DecodeAuthInfo(const byte* input, int sz, DecodedCert* cert)
 }
 
 
-static int DecodeAuthKeyId(const byte* input, int sz, DecodedCert* cert)
+static int DecodeAuthKeyId(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0;
     int length = 0, ret = 0;
@@ -8190,7 +8143,7 @@ static int DecodeAuthKeyId(const byte* input, int sz, DecodedCert* cert)
 }
 
 
-static int DecodeSubjKeyId(const byte* input, int sz, DecodedCert* cert)
+static int DecodeSubjKeyId(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0;
     int length = 0, ret = 0;
@@ -8219,7 +8172,7 @@ static int DecodeSubjKeyId(const byte* input, int sz, DecodedCert* cert)
 }
 
 
-static int DecodeKeyUsage(const byte* input, int sz, DecodedCert* cert)
+static int DecodeKeyUsage(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0;
     int length;
@@ -8238,7 +8191,7 @@ static int DecodeKeyUsage(const byte* input, int sz, DecodedCert* cert)
 }
 
 
-static int DecodeExtKeyUsage(const byte* input, int sz, DecodedCert* cert)
+static int DecodeExtKeyUsage(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0, oid;
     int length, ret;
@@ -8297,8 +8250,7 @@ static int DecodeExtKeyUsage(const byte* input, int sz, DecodedCert* cert)
 
 #ifndef IGNORE_NAME_CONSTRAINTS
 #define ASN_TYPE_MASK 0xF
-static int DecodeSubtree(const byte* input, int sz,
-                         Base_entry** head, void* heap)
+static int DecodeSubtree(const byte *input, int sz, _Ptr<Base_entry*> head, void *heap)
 {
     word32 idx = 0;
 
@@ -8365,7 +8317,7 @@ static int DecodeSubtree(const byte* input, int sz,
 }
 
 
-static int DecodeNameConstraints(const byte* input, int sz, DecodedCert* cert)
+static int DecodeNameConstraints(const byte *input, int sz, _Ptr<DecodedCert> cert)
 {
     word32 idx = 0;
     int length = 0;
@@ -8379,7 +8331,7 @@ static int DecodeNameConstraints(const byte* input, int sz, DecodedCert* cert)
 
     while (idx < (word32)sz) {
         byte b = input[idx++];
-        Base_entry** subtree = NULL;
+        _Ptr<Base_entry*> subtree =  NULL;
 
         if (GetLength(input, &idx, &length, sz) <= 0) {
             WOLFSSL_MSG("\tinvalid length");
@@ -8395,7 +8347,7 @@ static int DecodeNameConstraints(const byte* input, int sz, DecodedCert* cert)
             return ASN_PARSE_E;
         }
 
-        DecodeSubtree(input + idx, length, subtree, cert->heap);
+        DecodeSubtree(input + idx, length, ((Base_entry **)subtree), cert->heap);
 
         idx += length;
     }
@@ -8575,7 +8527,7 @@ exit:
 #define VERIFY_AND_SET_OID(bit) bit = 1;
 #endif
 
-static int DecodeCertExtensions(DecodedCert* cert)
+static int DecodeCertExtensions(_Ptr<DecodedCert> cert)
 /*
  *  Processing the Certificate Extensions. This does not modify the current
  *  index. It is works starting with the recorded extensions pointer.
@@ -8824,7 +8776,7 @@ static int DecodeCertExtensions(DecodedCert* cert)
     return criticalFail ? ASN_CRIT_EXT_E : 0;
 }
 
-int ParseCert(DecodedCert* cert, int type, int verify, void* cm)
+int ParseCert(_Ptr<DecodedCert> cert, int type, int verify, void *cm)
 {
     int   ret;
     char* ptr;
@@ -9231,7 +9183,7 @@ int CheckCertSignature(const byte* cert, word32 certSz, void* heap, void* cm)
 #endif /* WOLFSSL_SMALL_CERT_VERIFY */
 #endif /* WOLFSSL_SMALL_CERT_VERIFY || OPENSSL_EXTRA */
 
-int ParseCertRelative(DecodedCert* cert, int type, int verify, void* cm)
+int ParseCertRelative(_Ptr<DecodedCert> cert, int type, int verify, void *cm)
 {
     int    ret = 0;
     int    checkPathLen = 0;
@@ -9240,7 +9192,7 @@ int ParseCertRelative(DecodedCert* cert, int type, int verify, void* cm)
 #if defined(WOLFSSL_RENESAS_TSIP)
     int    idx = 0;
 #endif
-    byte*  tsip_encRsaKeyIdx;
+    _Ptr<byte> tsip_encRsaKeyIdx = ((void *)0);
 
     if (cert == NULL) {
         return BAD_FUNC_ARG;
@@ -9540,7 +9492,7 @@ exit_pcr:
 }
 
 /* Create and init an new signer */
-Signer* MakeSigner(void* heap)
+Signer * MakeSigner(void *heap)
 {
     Signer* signer = (Signer*) XMALLOC(sizeof(Signer), heap,
                                        DYNAMIC_TYPE_SIGNER);
@@ -9554,7 +9506,7 @@ Signer* MakeSigner(void* heap)
 
 
 /* Free an individual signer */
-void FreeSigner(Signer* signer, void* heap)
+void FreeSigner(Signer *signer, void *heap)
 {
     XFREE(signer->name, heap, DYNAMIC_TYPE_SUBJECT_CN);
     XFREE((void*)signer->publicKey, heap, DYNAMIC_TYPE_PUBLIC_KEY);
@@ -9574,7 +9526,7 @@ void FreeSigner(Signer* signer, void* heap)
 
 
 /* Free the whole singer table with number of rows */
-void FreeSignerTable(Signer** table, int rows, void* heap)
+void FreeSignerTable(Signer **table, int rows, void *heap)
 {
     int i;
 
@@ -9632,7 +9584,7 @@ void FreeTrustedPeerTable(TrustedPeerCert** table, int rows, void* heap)
 }
 #endif /* WOLFSSL_TRUST_PEER_CERT */
 
-int SetMyVersion(word32 version, byte* output, int header)
+int SetMyVersion(word32 version, byte *output, int header)
 {
     int i = 0;
 
@@ -9650,8 +9602,7 @@ int SetMyVersion(word32 version, byte* output, int header)
     return i;
 }
 
-int SetSerialNumber(const byte* sn, word32 snSz, byte* output,
-    word32 outputSz, int maxSnSz)
+int SetSerialNumber(const byte *sn, word32 snSz, byte *output, word32 outputSz, int maxSnSz)
 {
     int i;
     int snSzInt = (int)snSz;
@@ -9696,8 +9647,7 @@ int SetSerialNumber(const byte* sn, word32 snSz, byte* output,
 
 #endif /* !NO_CERTS */
 
-int GetSerialNumber(const byte* input, word32* inOutIdx,
-    byte* serial, int* serialSz, word32 maxIdx)
+int GetSerialNumber(const byte *input, _Ptr<word32> inOutIdx, byte *serial, _Ptr<int> serialSz, word32 maxIdx)
 {
     int result = 0;
     int ret;
@@ -9732,7 +9682,7 @@ int GetSerialNumber(const byte* input, word32* inOutIdx,
 
 #ifndef NO_CERTS
 
-int AllocDer(DerBuffer** pDer, word32 length, int type, void* heap)
+int AllocDer(_Ptr<DerBuffer*> pDer, word32 length, int type, void *heap)
 {
     int ret = BAD_FUNC_ARG;
     if (pDer) {
@@ -9768,7 +9718,7 @@ int AllocDer(DerBuffer** pDer, word32 length, int type, void* heap)
     return ret;
 }
 
-void FreeDer(DerBuffer** pDer)
+void FreeDer(_Ptr<DerBuffer*> pDer)
 {
     if (pDer && *pDer)
     {
@@ -9786,13 +9736,13 @@ void FreeDer(DerBuffer** pDer)
     }
 }
 
-int wc_AllocDer(DerBuffer** pDer, word32 length, int type, void* heap)
+int wc_AllocDer(_Ptr<DerBuffer*> pDer, word32 length, int type, void *heap)
 {
-    return AllocDer(pDer, length, type, heap);
+    return AllocDer(((DerBuffer **)pDer), length, type, heap);
 }
-void wc_FreeDer(DerBuffer** pDer)
+void wc_FreeDer(_Ptr<DerBuffer*> pDer)
 {
-    FreeDer(pDer);
+    FreeDer(((DerBuffer **)pDer));
 }
 
 
@@ -9849,7 +9799,7 @@ wcchar END_PUB_KEY          = "-----END PUBLIC KEY-----";
 #endif
 
 
-static WC_INLINE char* SkipEndOfLineChars(char* line, const char* endOfLine)
+static char * SkipEndOfLineChars(char *line, const char *endOfLine : itype(_Ptr<const char>))
 {
     /* eat end of line characters */
     while (line < endOfLine &&
@@ -9859,7 +9809,7 @@ static WC_INLINE char* SkipEndOfLineChars(char* line, const char* endOfLine)
     return line;
 }
 
-int wc_PemGetHeaderFooter(int type, const char** header, const char** footer)
+int wc_PemGetHeaderFooter(int type, _Ptr<const char*> header, _Ptr<const char*> footer)
 {
     int ret = BAD_FUNC_ARG;
 
@@ -10304,8 +10254,7 @@ int wc_DerToPemEx(const byte* der, word32 derSz, byte* output, word32 outSz,
 
 /* Remove PEM header/footer, convert to ASN1, store any encrypted data
    info->consumed tracks of PEM bytes consumed in case multiple parts */
-int PemToDer(const unsigned char* buff, long longSz, int type,
-              DerBuffer** pDer, void* heap, EncryptedInfo* info, int* keyFormat)
+int PemToDer(const unsigned char *buff, long longSz, int type, _Ptr<DerBuffer*> pDer, void *heap, EncryptedInfo *info : itype(_Ptr<EncryptedInfo>), _Ptr<int> keyFormat)
 {
     const char* header      = NULL;
     const char* footer      = NULL;
@@ -10332,7 +10281,7 @@ int PemToDer(const unsigned char* buff, long longSz, int type,
     WOLFSSL_ENTER("PemToDer");
 
     /* get PEM header and footer based on type */
-    ret = wc_PemGetHeaderFooter(type, &header, &footer);
+    ret = wc_PemGetHeaderFooter(type, ((const char **)&header), ((const char **)&footer));
     if (ret != 0)
         return ret;
 
@@ -10490,7 +10439,7 @@ int PemToDer(const unsigned char* buff, long longSz, int type,
     if (neededSz > sz || neededSz <= 0)
         return BUFFER_E;
 
-    ret = AllocDer(pDer, (word32)neededSz, type, heap);
+    ret = AllocDer(((DerBuffer **)pDer), (word32)neededSz, type, heap);
     if (ret < 0) {
         return ret;
     }
@@ -10613,15 +10562,14 @@ int PemToDer(const unsigned char* buff, long longSz, int type,
     return ret;
 }
 
-int wc_PemToDer(const unsigned char* buff, long longSz, int type,
-              DerBuffer** pDer, void* heap, EncryptedInfo* info, int* eccKey)
+int wc_PemToDer(const unsigned char *buff, long longSz, int type, _Ptr<DerBuffer*> pDer, void *heap, _Ptr<EncryptedInfo> info, _Ptr<int> eccKey)
 {
-    return PemToDer(buff, longSz, type, pDer, heap, info, eccKey);
+    return PemToDer(buff, longSz, type, ((DerBuffer **)pDer), heap, info, eccKey);
 }
 
 
 /* our KeyPemToDer password callback, password in userData */
-static WC_INLINE int OurPasswordCb(char* passwd, int sz, int rw, void* userdata)
+static int OurPasswordCb(char *passwd, int sz, int rw, void *userdata)
 {
     (void)rw;
 
@@ -10633,8 +10581,7 @@ static WC_INLINE int OurPasswordCb(char* passwd, int sz, int rw, void* userdata)
 }
 
 /* Return bytes written to buff or < 0 for error */
-int wc_KeyPemToDer(const unsigned char* pem, int pemSz,
-                        unsigned char* buff, int buffSz, const char* pass)
+int wc_KeyPemToDer(const unsigned char *pem, int pemSz, unsigned char *buff, int buffSz, const char *pass)
 {
     int            eccKey = 0;
     int            ret;
@@ -10663,7 +10610,7 @@ int wc_KeyPemToDer(const unsigned char* pem, int pemSz,
     info->passwd_cb = OurPasswordCb;
     info->passwd_userdata = (void*)pass;
 
-    ret = PemToDer(pem, pemSz, PRIVATEKEY_TYPE, &der, NULL, info, &eccKey);
+    ret = PemToDer(pem, pemSz, PRIVATEKEY_TYPE, ((DerBuffer **)&der), NULL, info, &eccKey);
 
 #ifdef WOLFSSL_SMALL_STACK
     XFREE(info, NULL, DYNAMIC_TYPE_ENCRYPTEDINFO);
@@ -10683,14 +10630,13 @@ int wc_KeyPemToDer(const unsigned char* pem, int pemSz,
         }
     }
 
-    FreeDer(&der);
+    FreeDer(((DerBuffer **)&der));
     return ret;
 }
 
 
 /* Return bytes written to buff or < 0 for error */
-int wc_CertPemToDer(const unsigned char* pem, int pemSz,
-                        unsigned char* buff, int buffSz, int type)
+int wc_CertPemToDer(const unsigned char *pem, int pemSz, unsigned char *buff, int buffSz, int type)
 {
     int            eccKey = 0;
     int            ret;
@@ -10709,7 +10655,7 @@ int wc_CertPemToDer(const unsigned char* pem, int pemSz,
     }
 
 
-    ret = PemToDer(pem, pemSz, type, &der, NULL, NULL, &eccKey);
+    ret = PemToDer(pem, pemSz, type, ((DerBuffer **)&der), NULL, NULL, &eccKey);
     if (ret < 0 || der == NULL) {
         WOLFSSL_MSG("Bad Pem To Der");
     }
@@ -10724,7 +10670,7 @@ int wc_CertPemToDer(const unsigned char* pem, int pemSz,
         }
     }
 
-    FreeDer(&der);
+    FreeDer(((DerBuffer **)&der));
     return ret;
 }
 
@@ -16989,8 +16935,7 @@ int CompareOcspReqResp(OcspRequest* req, OcspResponse* resp)
 
 
 /* store WC_SHA hash of NAME */
-int GetNameHash(const byte* source, word32* idx, byte* hash,
-                             int maxIdx)
+int GetNameHash(const byte *source, _Ptr<word32> idx, byte *hash, int maxIdx)
 {
     int    length;  /* length of all distinguished names */
     int    ret;

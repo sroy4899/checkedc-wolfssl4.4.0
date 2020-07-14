@@ -45,9 +45,7 @@
 #ifdef HAVE_PBKDF1
 
 /* PKCS#5 v1.5 with non standard extension to optionally derive the extra data (IV) */
-int wc_PBKDF1_ex(byte* key, int keyLen, byte* iv, int ivLen,
-    const byte* passwd, int passwdLen, const byte* salt, int saltLen,
-    int iterations, int hashType, void* heap)
+int wc_PBKDF1_ex(byte *key, int keyLen, byte *iv, int ivLen, const byte *passwd, int passwdLen, const byte *salt, int saltLen, int iterations, int hashType, void *heap)
 {
     int  err;
     int  keyLeft, ivLeft, i;
@@ -160,8 +158,7 @@ int wc_PBKDF1_ex(byte* key, int keyLen, byte* iv, int ivLen,
 }
 
 /* PKCS#5 v1.5 */
-int wc_PBKDF1(byte* output, const byte* passwd, int pLen, const byte* salt,
-           int sLen, int iterations, int kLen, int hashType)
+int wc_PBKDF1(byte *output, const byte *passwd, int pLen, const byte *salt, int sLen, int iterations, int kLen, int hashType)
 {
     return wc_PBKDF1_ex(output, kLen, NULL, 0,
         passwd, pLen, salt, sLen, iterations, hashType, NULL);
@@ -171,8 +168,7 @@ int wc_PBKDF1(byte* output, const byte* passwd, int pLen, const byte* salt,
 
 #ifdef HAVE_PBKDF2
 
-int wc_PBKDF2_ex(byte* output, const byte* passwd, int pLen, const byte* salt,
-           int sLen, int iterations, int kLen, int hashType, void* heap, int devId)
+int wc_PBKDF2_ex(byte *output, const byte *passwd, int pLen, const byte *salt, int sLen, int iterations, int kLen, int hashType, void *heap, int devId)
 {
     word32 i = 1;
     int    hLen;
@@ -270,8 +266,7 @@ int wc_PBKDF2_ex(byte* output, const byte* passwd, int pLen, const byte* salt,
     return ret;
 }
 
-int wc_PBKDF2(byte* output, const byte* passwd, int pLen, const byte* salt,
-           int sLen, int iterations, int kLen, int hashType)
+int wc_PBKDF2(byte *output, const byte *passwd, int pLen, const byte *salt, int sLen, int iterations, int kLen, int hashType)
 {
     return wc_PBKDF2_ex(output, passwd, pLen, salt, sLen, iterations, kLen,
         hashType, NULL, INVALID_DEVID);
@@ -282,8 +277,7 @@ int wc_PBKDF2(byte* output, const byte* passwd, int pLen, const byte* salt,
 #ifdef HAVE_PKCS12
 
 /* helper for PKCS12_PBKDF(), does hash operation */
-static int DoPKCS12Hash(int hashType, byte* buffer, word32 totalLen,
-                 byte* Ai, word32 u, int iterations)
+static int DoPKCS12Hash(int hashType, byte *buffer, word32 totalLen, byte *Ai, word32 u, int iterations)
 {
     int i;
     int ret = 0;
@@ -338,9 +332,7 @@ static int DoPKCS12Hash(int hashType, byte* buffer, word32 totalLen,
 }
 
 
-int wc_PKCS12_PBKDF(byte* output, const byte* passwd, int passLen,
-    const byte* salt, int saltLen, int iterations, int kLen, int hashType,
-    int id)
+int wc_PKCS12_PBKDF(byte *output, const byte *passwd, int passLen, const byte *salt, int saltLen, int iterations, int kLen, int hashType, int id)
 {
     return wc_PKCS12_PBKDF_ex(output, passwd, passLen, salt, saltLen,
                               iterations, kLen, hashType, id, NULL);
@@ -348,9 +340,7 @@ int wc_PKCS12_PBKDF(byte* output, const byte* passwd, int passLen,
 
 
 /* extended API that allows a heap hint to be used */
-int wc_PKCS12_PBKDF_ex(byte* output, const byte* passwd, int passLen,
-                       const byte* salt, int saltLen, int iterations, int kLen,
-                       int hashType, int id, void* heap)
+int wc_PKCS12_PBKDF_ex(byte *output, const byte *passwd, int passLen, const byte *salt, int saltLen, int iterations, int kLen, int hashType, int id, void *heap)
 {
     /* all in bytes instead of bits */
     word32 u, v, dLen, pLen, iLen, sLen, totalLen;

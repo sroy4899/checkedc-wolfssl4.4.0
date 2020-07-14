@@ -126,7 +126,7 @@ static struct log mynewt_log;
 
 
 /* allow this to be set to NULL, so logs can be redirected to default output */
-int wolfSSL_SetLoggingCb(wolfSSL_Logging_cb f)
+int wolfSSL_SetLoggingCb(_Ptr<void (int , const _Ptr<const char> )> f)
 {
 #ifdef DEBUG_WOLFSSL
     log_function = f;
@@ -138,7 +138,7 @@ int wolfSSL_SetLoggingCb(wolfSSL_Logging_cb f)
 }
 
 /* allow this to be set to NULL, so logs can be redirected to default output */
-wolfSSL_Logging_cb wolfSSL_GetLoggingCb(void)
+_Ptr<void (int , const _Ptr<const char> )> wolfSSL_GetLoggingCb(void)
 {
 #ifdef DEBUG_WOLFSSL
     return log_function;

@@ -57,7 +57,7 @@ const byte base64Decode[] = { 62, BAD, BAD, BAD, 63,   /* + starts at 0x2B */
                               46, 47, 48, 49, 50, 51
                             };
 
-static WC_INLINE int Base64_SkipNewline(const byte* in, word32 *inLen, word32 *outJ)
+static int Base64_SkipNewline(const byte *in, _Ptr<word32> inLen, _Ptr<word32> outJ)
 {
     word32 len = *inLen;
     word32 j = *outJ;
@@ -87,7 +87,7 @@ static WC_INLINE int Base64_SkipNewline(const byte* in, word32 *inLen, word32 *o
     return 0;
 }
 
-int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
+int Base64_Decode(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen)
 {
     word32 i = 0;
     word32 j = 0;
@@ -198,8 +198,7 @@ const byte base64Encode[] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 
 /* make sure *i (idx) won't exceed max, store and possibly escape to out,
  * raw means use e w/o decode,  0 on success */
-static int CEscape(int escaped, byte e, byte* out, word32* i, word32 max,
-                  int raw, int getSzOnly)
+static int CEscape(int escaped, byte e, byte *out, _Ptr<word32> i, word32 max, int raw, int getSzOnly)
 {
     int    doEscape = 0;
     word32 needed = 1;
@@ -280,8 +279,7 @@ static int CEscape(int escaped, byte e, byte* out, word32* i, word32 max,
 
 /* internal worker, handles both escaped and normal line endings.
    If out buffer is NULL, will return sz needed in outLen */
-static int DoBase64_Encode(const byte* in, word32 inLen, byte* out,
-                           word32* outLen, int escaped)
+static int DoBase64_Encode(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen, int escaped)
 {
     int    ret = 0;
     word32 i = 0,
@@ -380,19 +378,19 @@ static int DoBase64_Encode(const byte* in, word32 inLen, byte* out,
 
 
 /* Base64 Encode, PEM style, with \n line endings */
-int Base64_Encode(const byte* in, word32 inLen, byte* out, word32* outLen)
+int Base64_Encode(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen)
 {
     return DoBase64_Encode(in, inLen, out, outLen, WC_STD_ENC);
 }
 
 
 /* Base64 Encode, with %0A escaped line endings instead of \n */
-int Base64_EncodeEsc(const byte* in, word32 inLen, byte* out, word32* outLen)
+int Base64_EncodeEsc(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen)
 {
     return DoBase64_Encode(in, inLen, out, outLen, WC_ESC_NL_ENC);
 }
 
-int Base64_Encode_NoNl(const byte* in, word32 inLen, byte* out, word32* outLen)
+int Base64_Encode_NoNl(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen)
 {
     return DoBase64_Encode(in, inLen, out, outLen, WC_NO_NL_ENC);
 }

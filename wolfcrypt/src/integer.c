@@ -82,8 +82,7 @@ WOLFSSL_LOCAL int sp_ModExp_4096(mp_int* base, mp_int* exp, mp_int* mod,
 #endif
 
 /* reverse an array, used for radix code */
-static void
-bn_reverse (unsigned char *s, int len)
+static void bn_reverse(unsigned char *s, int len)
 {
     int     ix, iy;
     unsigned char t;
@@ -107,8 +106,7 @@ word32 CheckRunTimeSettings(void)
 
 
 /* handle up to 6 inits */
-int mp_init_multi(mp_int* a, mp_int* b, mp_int* c, mp_int* d, mp_int* e,
-                  mp_int* f)
+int mp_init_multi(mp_int *a, mp_int *b, mp_int *c, mp_int *d, mp_int *e, mp_int *f)
 {
     int res = MP_OKAY;
 
@@ -152,7 +150,7 @@ int mp_init_multi(mp_int* a, mp_int* b, mp_int* c, mp_int* d, mp_int* e,
 
 
 /* init a new mp_int */
-int mp_init (mp_int * a)
+int mp_init(mp_int *a : itype(_Ptr<mp_int>))
 {
   /* Safeguard against passing in a null pointer */
   if (a == NULL)
@@ -175,7 +173,7 @@ int mp_init (mp_int * a)
 
 
 /* clear one (frees)  */
-void mp_clear (mp_int * a)
+void mp_clear(mp_int *a : itype(_Ptr<mp_int>))
 {
   int i;
 
@@ -198,7 +196,7 @@ void mp_clear (mp_int * a)
   }
 }
 
-void mp_free (mp_int * a)
+void mp_free(_Ptr<mp_int> a)
 {
   /* only do anything if a hasn't been freed previously */
   if (a->dp != NULL) {
@@ -212,7 +210,7 @@ void mp_free (mp_int * a)
 #endif
 }
 
-void mp_forcezero(mp_int * a)
+void mp_forcezero(mp_int *a : itype(_Ptr<mp_int>))
 {
     if (a == NULL)
         return;
@@ -238,7 +236,7 @@ void mp_forcezero(mp_int * a)
 
 
 /* get the size for an unsigned equivalent */
-int mp_unsigned_bin_size (mp_int * a)
+int mp_unsigned_bin_size(mp_int *a : itype(_Ptr<mp_int>))
 {
   int     size = mp_count_bits (a);
   return (size / 8 + ((size & 7) != 0 ? 1 : 0));
@@ -246,7 +244,7 @@ int mp_unsigned_bin_size (mp_int * a)
 
 
 /* returns the number of bits in an int */
-int mp_count_bits (mp_int * a)
+int mp_count_bits(_Ptr<mp_int> a)
 {
   int     r;
   mp_digit q;
@@ -269,7 +267,7 @@ int mp_count_bits (mp_int * a)
 }
 
 
-int mp_leading_bit (mp_int * a)
+int mp_leading_bit(_Ptr<mp_int> a)
 {
     int bit = 0;
     mp_int t;
@@ -290,7 +288,7 @@ int mp_leading_bit (mp_int * a)
     return bit;
 }
 
-int mp_to_unsigned_bin_at_pos(int x, mp_int *t, unsigned char *b)
+int mp_to_unsigned_bin_at_pos(int x, _Ptr<mp_int> t, unsigned char *b)
 {
   int res = 0;
   while (mp_iszero(t) == MP_NO) {
@@ -308,7 +306,7 @@ int mp_to_unsigned_bin_at_pos(int x, mp_int *t, unsigned char *b)
 }
 
 /* store in unsigned [big endian] format */
-int mp_to_unsigned_bin (mp_int * a, unsigned char *b)
+int mp_to_unsigned_bin(mp_int *a : itype(_Ptr<mp_int>), unsigned char *b)
 {
   int     x, res;
   mp_int  t;
@@ -328,7 +326,7 @@ int mp_to_unsigned_bin (mp_int * a, unsigned char *b)
   return res;
 }
 
-int mp_to_unsigned_bin_len(mp_int * a, unsigned char *b, int c)
+int mp_to_unsigned_bin_len(mp_int *a : itype(_Ptr<mp_int>), unsigned char *b, int c)
 {
     int i, len;
 
@@ -341,7 +339,7 @@ int mp_to_unsigned_bin_len(mp_int * a, unsigned char *b, int c)
 }
 
 /* creates "a" then copies b into it */
-int mp_init_copy (mp_int * a, mp_int * b)
+int mp_init_copy(_Ptr<mp_int> a, mp_int *b : itype(_Ptr<mp_int>))
 {
   int     res;
 
@@ -358,7 +356,7 @@ int mp_init_copy (mp_int * a, mp_int * b)
 
 
 /* copy, b = a */
-int mp_copy (mp_int * a, mp_int * b)
+int mp_copy(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>))
 {
   int     res, n;
 
@@ -409,7 +407,7 @@ int mp_copy (mp_int * a, mp_int * b)
 
 
 /* grow as required */
-int mp_grow (mp_int * a, int size)
+int mp_grow(mp_int *a : itype(_Ptr<mp_int>), int size)
 {
   int     i;
   mp_digit *tmp;
@@ -448,7 +446,7 @@ int mp_grow (mp_int * a, int size)
 
 /* shift right by a certain bit count (store quotient in c, optional
    remainder in d) */
-int mp_div_2d (mp_int * a, int b, mp_int * c, mp_int * d)
+int mp_div_2d(mp_int *a : itype(_Ptr<mp_int>), int b, _Ptr<mp_int> c, mp_int *d : itype(_Ptr<mp_int>))
 {
   int     D, res;
   mp_int  t;
@@ -501,7 +499,7 @@ int mp_div_2d (mp_int * a, int b, mp_int * c, mp_int * d)
 
 
 /* set to zero */
-void mp_zero (mp_int * a)
+void mp_zero(_Ptr<mp_int> a)
 {
   int       n;
   mp_digit *tmp;
@@ -526,7 +524,7 @@ void mp_zero (mp_int * a)
  * Typically very fast.  Also fixes the sign if there
  * are no more leading digits
  */
-void mp_clamp (mp_int * a)
+void mp_clamp(mp_int *a : itype(_Ptr<mp_int>))
 {
   /* decrease used while the most significant digit is
    * zero.
@@ -545,7 +543,7 @@ void mp_clamp (mp_int * a)
 /* swap the elements of two integers, for cases where you can't simply swap the
  * mp_int pointers around
  */
-void mp_exch (mp_int * a, mp_int * b)
+void mp_exch(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   mp_int  t;
 
@@ -556,7 +554,7 @@ void mp_exch (mp_int * a, mp_int * b)
 
 
 /* shift right a certain number of bits */
-void mp_rshb (mp_int *c, int x)
+void mp_rshb(_Ptr<mp_int> c, int x)
 {
     mp_digit *tmpc, mask, shift;
     mp_digit r, rr;
@@ -591,7 +589,7 @@ void mp_rshb (mp_int *c, int x)
 
 
 /* shift right a certain amount of digits */
-void mp_rshd (mp_int * a, int b)
+void mp_rshd(mp_int *a : itype(_Ptr<mp_int>), int b)
 {
   int     x;
 
@@ -643,7 +641,7 @@ void mp_rshd (mp_int * a, int b)
 
 
 /* calc a value mod 2**b */
-int mp_mod_2d (mp_int * a, int b, mp_int * c)
+int mp_mod_2d(mp_int *a : itype(_Ptr<mp_int>), int b, mp_int *c : itype(_Ptr<mp_int>))
 {
   int     x, res;
 
@@ -677,7 +675,7 @@ int mp_mod_2d (mp_int * a, int b, mp_int * c)
 
 
 /* reads a unsigned char array, assumes the msb is stored first [big endian] */
-int mp_read_unsigned_bin (mp_int * a, const unsigned char *b, int c)
+int mp_read_unsigned_bin(mp_int *a : itype(_Ptr<mp_int>), const unsigned char *b, int c)
 {
   int     res;
 
@@ -712,7 +710,7 @@ int mp_read_unsigned_bin (mp_int * a, const unsigned char *b, int c)
 
 
 /* shift left by a certain bit count */
-int mp_mul_2d (mp_int * a, int b, mp_int * c)
+int mp_mul_2d(mp_int *a : itype(_Ptr<mp_int>), int b, mp_int *c : itype(_Ptr<mp_int>))
 {
   mp_digit d;
   int      res;
@@ -777,7 +775,7 @@ int mp_mul_2d (mp_int * a, int b, mp_int * c)
 
 
 /* shift left a certain amount of digits */
-int mp_lshd (mp_int * a, int b)
+int mp_lshd(_Ptr<mp_int> a, int b)
 {
   int     x, res;
 
@@ -831,7 +829,7 @@ int mp_lshd (mp_int * a, int b)
 #if defined(FREESCALE_LTC_TFM)
 int wolfcrypt_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
 #else
-int mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
+int mp_exptmod(mp_int *G : itype(_Ptr<mp_int>), mp_int *X : itype(_Ptr<mp_int>), mp_int *P : itype(_Ptr<mp_int>), mp_int *Y : itype(_Ptr<mp_int>))
 #endif
 {
   int dr;
@@ -939,7 +937,7 @@ int mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
 #endif
 }
 
-int mp_exptmod_ex (mp_int * G, mp_int * X, int digits, mp_int * P, mp_int * Y)
+int mp_exptmod_ex(_Ptr<mp_int> G, _Ptr<mp_int> X, int digits, _Ptr<mp_int> P, _Ptr<mp_int> Y)
 {
     (void)digits;
     return mp_exptmod(G, X, P, Y);
@@ -949,7 +947,7 @@ int mp_exptmod_ex (mp_int * G, mp_int * X, int digits, mp_int * P, mp_int * Y)
  *
  * Simple function copies the input and fixes the sign to positive
  */
-int mp_abs (mp_int * a, mp_int * b)
+int mp_abs(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   int     res;
 
@@ -971,7 +969,7 @@ int mp_abs (mp_int * a, mp_int * b)
 #if defined(FREESCALE_LTC_TFM)
 int wolfcrypt_mp_invmod(mp_int * a, mp_int * b, mp_int * c)
 #else
-int mp_invmod (mp_int * a, mp_int * b, mp_int * c)
+int mp_invmod(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c)
 #endif
 {
   /* b cannot be negative or zero, and can not divide by 0 (1/a mod b) */
@@ -1000,7 +998,7 @@ int mp_invmod (mp_int * a, mp_int * b, mp_int * c)
  * Based on slow invmod except this is optimized for the case where b is
  * odd as per HAC Note 14.64 on pp. 610
  */
-int fast_mp_invmod (mp_int * a, mp_int * b, mp_int * c)
+int fast_mp_invmod(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c)
 {
   mp_int  x, y, u, v, B, D;
   int     res, neg, loop_check = 0;
@@ -1140,7 +1138,7 @@ LBL_ERR:mp_clear(&x);
 
 
 /* hac 14.61, pp608 */
-int mp_invmod_slow (mp_int * a, mp_int * b, mp_int * c)
+int mp_invmod_slow(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c)
 {
   mp_int  x, y, u, v, A, B, C, D;
   int     res;
@@ -1322,7 +1320,7 @@ LBL_ERR:mp_clear(&x);
 
 
 /* compare magnitude of two ints (unsigned) */
-int mp_cmp_mag (mp_int * a, mp_int * b)
+int mp_cmp_mag(mp_int *a : itype(_Ptr<mp_int>), _Ptr<mp_int> b)
 {
   int     n;
   mp_digit *tmpa, *tmpb;
@@ -1357,7 +1355,7 @@ int mp_cmp_mag (mp_int * a, mp_int * b)
 
 
 /* compare two ints (signed)*/
-int mp_cmp (mp_int * a, mp_int * b)
+int mp_cmp(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>))
 {
   /* compare based on sign */
   if (a->sign != b->sign) {
@@ -1379,7 +1377,7 @@ int mp_cmp (mp_int * a, mp_int * b)
 
 
 /* compare a digit */
-int mp_cmp_d(mp_int * a, mp_digit b)
+int mp_cmp_d(mp_int *a : itype(_Ptr<mp_int>), mp_digit b)
 {
   /* special case for zero*/
   if (a->used == 0 && b == 0)
@@ -1407,7 +1405,7 @@ int mp_cmp_d(mp_int * a, mp_digit b)
 
 
 /* set to a digit */
-int mp_set (mp_int * a, mp_digit b)
+int mp_set(_Ptr<mp_int> a, mp_digit b)
 {
   int res;
   mp_zero (a);
@@ -1420,7 +1418,7 @@ int mp_set (mp_int * a, mp_digit b)
 }
 
 /* check if a bit is set */
-int mp_is_bit_set (mp_int *a, mp_digit b)
+int mp_is_bit_set(_Ptr<mp_int> a, mp_digit b)
 {
     if ((mp_digit)a->used < b/DIGIT_BIT)
         return 0;
@@ -1432,7 +1430,7 @@ int mp_is_bit_set (mp_int *a, mp_digit b)
 #if defined(FREESCALE_LTC_TFM)
 int wolfcrypt_mp_mod(mp_int * a, mp_int * b, mp_int * c)
 #else
-int mp_mod (mp_int * a, mp_int * b, mp_int * c)
+int mp_mod(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>), mp_int *c : itype(_Ptr<mp_int>))
 #endif
 {
   mp_int  t;
@@ -1460,7 +1458,7 @@ int mp_mod (mp_int * a, mp_int * b, mp_int * c)
 
 
 /* slower bit-bang division... also smaller */
-int mp_div(mp_int * a, mp_int * b, mp_int * c, mp_int * d)
+int mp_div(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, _Ptr<mp_int> d)
 {
    mp_int ta, tb, tq, q;
    int    res, n, n2;
@@ -1533,7 +1531,7 @@ LBL_ERR:
 
 
 /* b = a/2 */
-int mp_div_2(mp_int * a, mp_int * b)
+int mp_div_2(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   int     x, res, oldused;
 
@@ -1581,7 +1579,7 @@ int mp_div_2(mp_int * a, mp_int * b)
 
 
 /* high level addition (handles signs) */
-int mp_add (mp_int * a, mp_int * b, mp_int * c)
+int mp_add(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>), mp_int *c : itype(_Ptr<mp_int>))
 {
   int sa, sb, res;
 
@@ -1613,9 +1611,9 @@ int mp_add (mp_int * a, mp_int * b, mp_int * c)
 
 
 /* low level addition, based on HAC pp.594, Algorithm 14.7 */
-int s_mp_add (mp_int * a, mp_int * b, mp_int * c)
+int s_mp_add(mp_int *a : itype(_Ptr<mp_int>), _Ptr<mp_int> b, mp_int *c : itype(_Ptr<mp_int>))
 {
-  mp_int *x;
+  _Ptr<mp_int> x = ((void *)0);
   int     olduse, res, min_ab, max_ab;
 
   /* find sizes, we let |a| <= |b| which means we have to sort
@@ -1701,7 +1699,7 @@ int s_mp_add (mp_int * a, mp_int * b, mp_int * c)
 
 
 /* low level subtraction (assumes |a| > |b|), HAC pp.595 Algorithm 14.9 */
-int s_mp_sub (mp_int * a, mp_int * b, mp_int * c)
+int s_mp_sub(mp_int *a : itype(_Ptr<mp_int>), _Ptr<mp_int> b, mp_int *c : itype(_Ptr<mp_int>))
 {
   int     olduse, res, min_b, max_a;
 
@@ -1773,7 +1771,7 @@ int s_mp_sub (mp_int * a, mp_int * b, mp_int * c)
 
 
 /* high level subtraction (handles signs) */
-int mp_sub (mp_int * a, mp_int * b, mp_int * c)
+int mp_sub(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>), mp_int *c : itype(_Ptr<mp_int>))
 {
   int     sa, sb, res;
 
@@ -1810,7 +1808,7 @@ int mp_sub (mp_int * a, mp_int * b, mp_int * c)
 
 
 /* determines if reduce_2k_l can be used */
-int mp_reduce_is_2k_l(mp_int *a)
+int mp_reduce_is_2k_l(_Ptr<mp_int> a)
 {
    int ix, iy;
 
@@ -1833,7 +1831,7 @@ int mp_reduce_is_2k_l(mp_int *a)
 
 
 /* determines if mp_reduce_2k can be used */
-int mp_reduce_is_2k(mp_int *a)
+int mp_reduce_is_2k(_Ptr<mp_int> a)
 {
    int ix, iy, iw;
    mp_digit iz;
@@ -1864,7 +1862,7 @@ int mp_reduce_is_2k(mp_int *a)
 
 
 /* determines if a number is a valid DR modulus */
-int mp_dr_is_modulus(mp_int *a)
+int mp_dr_is_modulus(_Ptr<mp_int> a)
 {
    int ix;
 
@@ -1900,8 +1898,7 @@ int mp_dr_is_modulus(mp_int *a)
    #define TAB_SIZE 256
 #endif
 
-int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
-                     int redmode)
+int mp_exptmod_fast(mp_int *G : itype(_Ptr<mp_int>), _Ptr<mp_int> X, _Ptr<mp_int> P, mp_int *Y : itype(_Ptr<mp_int>), int redmode)
 {
   mp_int res;
   mp_digit buf, mp;
@@ -1915,7 +1912,7 @@ int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
    * one of many reduction algorithms without modding the guts of
    * the code with if statements everywhere.
    */
-  int     (*redux)(mp_int*,mp_int*,mp_digit) = NULL;
+  _Ptr<int (mp_int *, _Ptr<mp_int> , mp_digit )> redux =  NULL;
 
 #ifdef WOLFSSL_SMALL_STACK
   M = (mp_int*) XMALLOC(sizeof(mp_int) * TAB_SIZE, NULL,
@@ -2221,7 +2218,7 @@ LBL_M:
 #elif DIGIT_BIT < 128
     #define WINSIZE    6
 #endif
-int mp_exptmod_base_2(mp_int * X, mp_int * P, mp_int * Y)
+int mp_exptmod_base_2(_Ptr<mp_int> X, _Ptr<mp_int> P, _Ptr<mp_int> Y)
 {
   mp_digit buf, mp;
   int      err = MP_OKAY, bitbuf, bitcpy, bitcnt, digidx, x, y;
@@ -2230,7 +2227,7 @@ int mp_exptmod_base_2(mp_int * X, mp_int * P, mp_int * Y)
 #else
   mp_int   res[1];
 #endif
-  int     (*redux)(mp_int*,mp_int*,mp_digit) = NULL;
+  _Ptr<int (mp_int *, _Ptr<mp_int> , mp_digit )> redux =  NULL;
 
   /* automatically pick the comba one if available (saves quite a few
      calls/ifs) */
@@ -2377,7 +2374,7 @@ LBL_M:
 
 
 /* setups the montgomery reduction stuff */
-int mp_montgomery_setup (mp_int * n, mp_digit * rho)
+int mp_montgomery_setup(_Ptr<mp_int> n, _Ptr<mp_digit> rho)
 {
   mp_digit x, b;
 
@@ -2423,7 +2420,7 @@ int mp_montgomery_setup (mp_int * n, mp_digit * rho)
  *
  * Based on Algorithm 14.32 on pp.601 of HAC.
 */
-int fast_mp_montgomery_reduce (mp_int * x, mp_int * n, mp_digit rho)
+int fast_mp_montgomery_reduce(mp_int *x, _Ptr<mp_int> n, mp_digit rho)
 {
   int     ix, res, olduse;
 #ifdef WOLFSSL_SMALL_STACK
@@ -2582,7 +2579,7 @@ int fast_mp_montgomery_reduce (mp_int * x, mp_int * n, mp_digit rho)
 
 
 /* computes xR**-1 == x (mod N) via Montgomery Reduction */
-int mp_montgomery_reduce (mp_int * x, mp_int * n, mp_digit rho)
+int mp_montgomery_reduce(mp_int *x, _Ptr<mp_int> n, mp_digit rho)
 {
   int     ix, res, digs;
   mp_digit mu;
@@ -2679,7 +2676,7 @@ int mp_montgomery_reduce (mp_int * x, mp_int * n, mp_digit rho)
 
 
 /* determines the setup value */
-void mp_dr_setup(mp_int *a, mp_digit *d)
+void mp_dr_setup(_Ptr<mp_int> a, _Ptr<mp_digit> d)
 {
    /* the casts are required if DIGIT_BIT is one less than
     * the number of bits in a mp_digit [e.g. DIGIT_BIT==31]
@@ -2703,7 +2700,7 @@ void mp_dr_setup(mp_int *a, mp_digit *d)
  *
  * Input x must be in the range 0 <= x <= (n-1)**2
  */
-int mp_dr_reduce (mp_int * x, mp_int * n, mp_digit k)
+int mp_dr_reduce(mp_int *x, _Ptr<mp_int> n, mp_digit k)
 {
   int      err, i, m;
   mp_word  r;
@@ -2765,7 +2762,7 @@ top:
 
 
 /* reduces a modulo n where n is of the form 2**p - d */
-int mp_reduce_2k(mp_int *a, mp_int *n, mp_digit d)
+int mp_reduce_2k(mp_int *a, _Ptr<mp_int> n, mp_digit d)
 {
    mp_int q;
    int    p, res;
@@ -2807,7 +2804,7 @@ ERR:
 
 
 /* determines the setup value */
-int mp_reduce_2k_setup(mp_int *a, mp_digit *d)
+int mp_reduce_2k_setup(_Ptr<mp_int> a, _Ptr<mp_digit> d)
 {
    int res, p;
    mp_int tmp;
@@ -2834,7 +2831,7 @@ int mp_reduce_2k_setup(mp_int *a, mp_digit *d)
 
 
 /* set the b bit of a */
-int mp_set_bit (mp_int * a, int b)
+int mp_set_bit(_Ptr<mp_int> a, int b)
 {
     int i = b / DIGIT_BIT, res;
 
@@ -2866,7 +2863,7 @@ int mp_set_bit (mp_int * a, int b)
  *
  * Simple algorithm which zeros the int, set the required bit
  */
-int mp_2expt (mp_int * a, int b)
+int mp_2expt(_Ptr<mp_int> a, int b)
 {
     /* zero a as per default */
     mp_zero (a);
@@ -2875,7 +2872,7 @@ int mp_2expt (mp_int * a, int b)
 }
 
 /* multiply by a digit */
-int mp_mul_d (mp_int * a, mp_digit b, mp_int * c)
+int mp_mul_d(_Ptr<mp_int> a, mp_digit b, _Ptr<mp_int> c)
 {
   mp_digit u, *tmpa, *tmpc;
   mp_word  r;
@@ -2936,7 +2933,7 @@ int mp_mul_d (mp_int * a, mp_digit b, mp_int * c)
 #if defined(FREESCALE_LTC_TFM)
 int wolfcrypt_mp_mulmod(mp_int *a, mp_int *b, mp_int *c, mp_int *d)
 #else
-int mp_mulmod (mp_int * a, mp_int * b, mp_int * c, mp_int * d)
+int mp_mulmod(mp_int *a : itype(_Ptr<mp_int>), _Ptr<mp_int> b, _Ptr<mp_int> c, mp_int *d : itype(_Ptr<mp_int>))
 #endif
 {
   int     res;
@@ -2957,7 +2954,7 @@ int mp_mulmod (mp_int * a, mp_int * b, mp_int * c, mp_int * d)
 
 
 /* d = a - b (mod c) */
-int mp_submod(mp_int* a, mp_int* b, mp_int* c, mp_int* d)
+int mp_submod(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, _Ptr<mp_int> d)
 {
   int     res;
   mp_int  t;
@@ -2977,7 +2974,7 @@ int mp_submod(mp_int* a, mp_int* b, mp_int* c, mp_int* d)
 }
 
 /* d = a + b (mod c) */
-int mp_addmod(mp_int* a, mp_int* b, mp_int* c, mp_int* d)
+int mp_addmod(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, _Ptr<mp_int> d)
 {
    int     res;
    mp_int  t;
@@ -2997,7 +2994,7 @@ int mp_addmod(mp_int* a, mp_int* b, mp_int* c, mp_int* d)
 }
 
 /* computes b = a*a */
-int mp_sqr (mp_int * a, mp_int * b)
+int mp_sqr(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>))
 {
   int     res;
 
@@ -3025,7 +3022,7 @@ int mp_sqr (mp_int * a, mp_int * b)
 #if defined(FREESCALE_LTC_TFM)
 int wolfcrypt_mp_mul(mp_int *a, mp_int *b, mp_int *c)
 #else
-int mp_mul (mp_int * a, mp_int * b, mp_int * c)
+int mp_mul(mp_int *a : itype(_Ptr<mp_int>), mp_int *b : itype(_Ptr<mp_int>), mp_int *c : itype(_Ptr<mp_int>))
 #endif
 {
   int     res, neg;
@@ -3060,7 +3057,7 @@ int mp_mul (mp_int * a, mp_int * b, mp_int * c)
 
 
 /* b = a*2 */
-int mp_mul_2(mp_int * a, mp_int * b)
+int mp_mul_2(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   int     x, res, oldused;
 
@@ -3122,7 +3119,7 @@ int mp_mul_2(mp_int * a, mp_int * b)
 
 
 /* divide by three (based on routine from MPI and the GMP manual) */
-int mp_div_3 (mp_int * a, mp_int *c, mp_digit * d)
+int mp_div_3(_Ptr<mp_int> a, _Ptr<mp_int> c, _Ptr<mp_digit> d)
 {
   mp_int   q;
   mp_word  w, t;
@@ -3179,7 +3176,7 @@ int mp_div_3 (mp_int * a, mp_int *c, mp_digit * d)
 
 
 /* init an mp_init for a given size */
-int mp_init_size (mp_int * a, int size)
+int mp_init_size(mp_int *a : itype(_Ptr<mp_int>), int size)
 {
   int x;
 
@@ -3220,7 +3217,7 @@ int mp_init_size (mp_int * a, int size)
 After that loop you do the squares and add them in.
 */
 
-int fast_s_mp_sqr (mp_int * a, mp_int * b)
+int fast_s_mp_sqr(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   int       olduse, res, pa, ix, iz;
 #ifdef WOLFSSL_SMALL_STACK
@@ -3339,7 +3336,7 @@ int fast_s_mp_sqr (mp_int * a, mp_int * b)
  * Based on Algorithm 14.12 on pp.595 of HAC.
  *
  */
-int fast_s_mp_mul_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
+int fast_s_mp_mul_digs(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, int digs)
 {
   int     olduse, res, pa, ix, iz;
 #ifdef WOLFSSL_SMALL_STACK
@@ -3428,7 +3425,7 @@ int fast_s_mp_mul_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
 
 
 /* low level squaring, b = a*a, HAC pp.596-597, Algorithm 14.16 */
-int s_mp_sqr (mp_int * a, mp_int * b)
+int s_mp_sqr(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   mp_int  t;
   int     res, ix, iy, pa;
@@ -3495,7 +3492,7 @@ int s_mp_sqr (mp_int * a, mp_int * b)
  * HAC pp. 595, Algorithm 14.12  Modified so you can control how
  * many digits of output are created.
  */
-int s_mp_mul_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
+int s_mp_mul_digs(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, int digs)
 {
   mp_int  t;
   int     res, pa, pb, ix, iy;
@@ -3567,7 +3564,7 @@ int s_mp_mul_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
  * The method is slightly modified to shift B unconditionally up to just under
  * the leading bit of b.  This saves a lot of multiple precision shifting.
  */
-int mp_montgomery_calc_normalization (mp_int * a, mp_int * b)
+int mp_montgomery_calc_normalization(mp_int *a : itype(_Ptr<mp_int>), _Ptr<mp_int> b)
 {
   int     x, bits, res;
 
@@ -3608,12 +3605,12 @@ int mp_montgomery_calc_normalization (mp_int * a, mp_int * b)
    #define TAB_SIZE 256
 #endif
 
-int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y, int redmode)
+int s_mp_exptmod(_Ptr<mp_int> G, _Ptr<mp_int> X, _Ptr<mp_int> P, _Ptr<mp_int> Y, int redmode)
 {
   mp_int  M[TAB_SIZE], res, mu;
   mp_digit buf;
   int     err, bitbuf, bitcpy, bitcnt, mode, digidx, x, y, winsize;
-  int (*redux)(mp_int*,mp_int*,mp_int*);
+  _Ptr<int (mp_int *, _Ptr<mp_int> , _Ptr<mp_int> )> redux = ((void *)0);
 
   /* find window size */
   x = mp_count_bits (X);
@@ -3840,7 +3837,7 @@ LBL_M:
 /* pre-calculate the value required for Barrett reduction
  * For a given modulus "b" it calculates the value required in "a"
  */
-int mp_reduce_setup (mp_int * a, mp_int * b)
+int mp_reduce_setup(_Ptr<mp_int> a, _Ptr<mp_int> b)
 {
   int     res;
 
@@ -3855,7 +3852,7 @@ int mp_reduce_setup (mp_int * a, mp_int * b)
  * precomputed via mp_reduce_setup.
  * From HAC pp.604 Algorithm 14.42
  */
-int mp_reduce (mp_int * x, mp_int * m, mp_int * mu)
+int mp_reduce(mp_int *x, _Ptr<mp_int> m, _Ptr<mp_int> mu)
 {
   mp_int  q;
   int     res, um = m->used;
@@ -3936,7 +3933,7 @@ CLEANUP:
    This differs from reduce_2k since "d" can be larger
    than a single digit.
 */
-int mp_reduce_2k_l(mp_int *a, mp_int *n, mp_int *d)
+int mp_reduce_2k_l(mp_int *a, _Ptr<mp_int> n, _Ptr<mp_int> d)
 {
    mp_int q;
    int    p, res;
@@ -3976,7 +3973,7 @@ ERR:
 
 
 /* determines the setup value */
-int mp_reduce_2k_setup_l(mp_int *a, mp_int *d)
+int mp_reduce_2k_setup_l(_Ptr<mp_int> a, _Ptr<mp_int> d)
 {
    int    res;
    mp_int tmp;
@@ -4002,7 +3999,7 @@ ERR:
 /* multiplies |a| * |b| and does not compute the lower digs digits
  * [meant to get the higher part of the product]
  */
-int s_mp_mul_high_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
+int s_mp_mul_high_digs(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, int digs)
 {
   mp_int  t;
   int     res, pa, pb, ix, iy;
@@ -4069,7 +4066,7 @@ int s_mp_mul_high_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
  *
  * Based on Algorithm 14.12 on pp.595 of HAC.
  */
-int fast_s_mp_mul_high_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
+int fast_s_mp_mul_high_digs(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c, int digs)
 {
   int     olduse, res, pa, ix, iz;
 #ifdef WOLFSSL_SMALL_STACK
@@ -4163,7 +4160,7 @@ int fast_s_mp_mul_high_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
 #ifndef MP_SET_CHUNK_BITS
     #define MP_SET_CHUNK_BITS 4
 #endif
-int mp_set_int (mp_int * a, unsigned long b)
+int mp_set_int(_Ptr<mp_int> a, unsigned long b)
 {
   int x, res;
 
@@ -4200,7 +4197,7 @@ int mp_set_int (mp_int * a, unsigned long b)
     !defined(NO_DSA) | !defined(NO_DH)
 
 /* c = a * a (mod b) */
-int mp_sqrmod (mp_int * a, mp_int * b, mp_int * c)
+int mp_sqrmod(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<mp_int> c)
 {
   int     res;
   mp_int  t;
@@ -4227,7 +4224,7 @@ int mp_sqrmod (mp_int * a, mp_int * b, mp_int * c)
     (!defined(NO_RSA) && !defined(NO_RSA_BOUNDS_CHECK))
 
 /* single digit addition */
-int mp_add_d (mp_int* a, mp_digit b, mp_int* c)
+int mp_add_d(mp_int *a : itype(_Ptr<mp_int>), mp_digit b, mp_int *c : itype(_Ptr<mp_int>))
 {
   int     res, ix, oldused;
   mp_digit *tmpa, *tmpc, mu;
@@ -4319,7 +4316,7 @@ int mp_add_d (mp_int* a, mp_digit b, mp_int* c)
 
 
 /* single digit subtraction */
-int mp_sub_d (mp_int * a, mp_digit b, mp_int * c)
+int mp_sub_d(mp_int *a : itype(_Ptr<mp_int>), mp_digit b, mp_int *c : itype(_Ptr<mp_int>))
 {
   mp_digit *tmpa, *tmpc, mu;
   int       res, ix, oldused;
@@ -4400,7 +4397,7 @@ static const int lnz[16] = {
 };
 
 /* Counts the number of lsbs which are zero before the first zero bit */
-int mp_cnt_lsb(mp_int *a)
+int mp_cnt_lsb(_Ptr<mp_int> a)
 {
     int x;
     mp_digit q = 0, qq;
@@ -4430,7 +4427,7 @@ int mp_cnt_lsb(mp_int *a)
 
 
 
-static int s_is_power_of_two(mp_digit b, int *p)
+static int s_is_power_of_two(mp_digit b, _Ptr<int> p)
 {
    int x;
 
@@ -4449,7 +4446,7 @@ static int s_is_power_of_two(mp_digit b, int *p)
 }
 
 /* single digit division (based on routine from MPI) */
-static int mp_div_d (mp_int * a, mp_digit b, mp_int * c, mp_digit * d)
+static int mp_div_d(_Ptr<mp_int> a, mp_digit b, _Ptr<mp_int> c, _Ptr<mp_digit> d)
 {
   mp_int  q;
   mp_word w;
@@ -4534,7 +4531,7 @@ static int mp_div_d (mp_int * a, mp_digit b, mp_int * c, mp_digit * d)
 }
 
 
-int mp_mod_d (mp_int * a, mp_digit b, mp_digit * c)
+int mp_mod_d(_Ptr<mp_int> a, mp_digit b, _Ptr<mp_digit> c)
 {
   return mp_div_d(a, b, NULL, c);
 }
@@ -4592,7 +4589,7 @@ const mp_digit ltm_prime_tab[PRIME_SIZE] = {
  * Randomly the chance of error is no more than 1/4 and often
  * very much lower.
  */
-static int mp_prime_miller_rabin (mp_int * a, mp_int * b, int *result)
+static int mp_prime_miller_rabin(_Ptr<mp_int> a, _Ptr<mp_int> b, _Ptr<int> result)
 {
   mp_int  n1, y, r;
   int     s, j, err;
@@ -4694,7 +4691,7 @@ LBL_N1:mp_clear (&n1);
  *
  * sets result to 0 if not, 1 if yes
  */
-static int mp_prime_is_divisible (mp_int * a, int *result)
+static int mp_prime_is_divisible(_Ptr<mp_int> a, _Ptr<int> result)
 {
   int     err, ix;
   mp_digit res;
@@ -4721,7 +4718,7 @@ static int mp_prime_is_divisible (mp_int * a, int *result)
 /*
  * Sets result to 1 if probably prime, 0 otherwise
  */
-int mp_prime_is_prime (mp_int * a, int t, int *result)
+int mp_prime_is_prime(_Ptr<mp_int> a, int t, _Ptr<int> result)
 {
   mp_int  b;
   int     ix, err, res;
@@ -4787,7 +4784,7 @@ LBL_B:mp_clear (&b);
 /*
  * Sets result to 1 if probably prime, 0 otherwise
  */
-int mp_prime_is_prime_ex (mp_int * a, int t, int *result, WC_RNG *rng)
+int mp_prime_is_prime_ex(_Ptr<mp_int> a, int t, _Ptr<int> result, _Ptr<WC_RNG> rng)
 {
   mp_int  b, c;
   int     ix, err, res;
@@ -5095,7 +5092,7 @@ const char *mp_s_rmap = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\
 
 #if !defined(NO_DSA) || defined(HAVE_ECC)
 /* read a string [ASCII] in a given radix */
-int mp_read_radix (mp_int * a, const char *str, int radix)
+int mp_read_radix(_Ptr<mp_int> a, const char *str, int radix)
 {
   int     y, res, neg;
   char    ch;

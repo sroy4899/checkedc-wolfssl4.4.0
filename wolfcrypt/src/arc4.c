@@ -32,7 +32,7 @@
 #include <wolfssl/wolfcrypt/arc4.h>
 
 
-int wc_Arc4SetKey(Arc4* arc4, const byte* key, word32 length)
+int wc_Arc4SetKey(_Ptr<Arc4> arc4, const byte *key, word32 length)
 {
     int ret = 0;
     word32 i;
@@ -70,7 +70,7 @@ int wc_Arc4SetKey(Arc4* arc4, const byte* key, word32 length)
 }
 
 
-static WC_INLINE byte MakeByte(word32* x, word32* y, byte* s)
+static byte MakeByte(_Ptr<word32> x, _Ptr<word32> y, byte *s)
 {
     word32 a = s[*x], b;
     *y = (*y+a) & 0xff;
@@ -84,7 +84,7 @@ static WC_INLINE byte MakeByte(word32* x, word32* y, byte* s)
 }
 
 
-int wc_Arc4Process(Arc4* arc4, byte* out, const byte* in, word32 length)
+int wc_Arc4Process(_Ptr<Arc4> arc4, byte *out, const byte *in, word32 length)
 {
     int ret = 0;
     word32 x;
@@ -114,7 +114,7 @@ int wc_Arc4Process(Arc4* arc4, byte* out, const byte* in, word32 length)
 }
 
 /* Initialize Arc4 for use with async device */
-int wc_Arc4Init(Arc4* arc4, void* heap, int devId)
+int wc_Arc4Init(_Ptr<Arc4> arc4, void *heap, int devId)
 {
     int ret = 0;
 
@@ -135,7 +135,7 @@ int wc_Arc4Init(Arc4* arc4, void* heap, int devId)
 
 
 /* Free Arc4 from use with async device */
-void wc_Arc4Free(Arc4* arc4)
+void wc_Arc4Free(_Ptr<Arc4> arc4)
 {
     if (arc4 == NULL)
         return;

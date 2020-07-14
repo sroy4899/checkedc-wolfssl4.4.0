@@ -446,8 +446,7 @@ int wc_HashGetBlockSize(enum wc_HashType hash_type)
 }
 
 /* Generic Hashing Wrapper */
-int wc_Hash(enum wc_HashType hash_type, const byte* data,
-    word32 data_len, byte* hash, word32 hash_len)
+int wc_Hash(enum wc_HashType hash_type, const byte *data, word32 data_len, byte *hash, word32 hash_len)
 {
     int ret = HASH_TYPE_E; /* Default to hash type error */
     word32 dig_size;
@@ -539,8 +538,7 @@ int wc_Hash(enum wc_HashType hash_type, const byte* data,
     return ret;
 }
 
-int wc_HashInit_ex(wc_HashAlg* hash, enum wc_HashType type, void* heap,
-    int devId)
+int wc_HashInit_ex(wc_HashAlg *hash : itype(_Ptr<wc_HashAlg>), enum wc_HashType type, void *heap, int devId)
 {
     int ret = HASH_TYPE_E; /* Default to hash type error */
 
@@ -614,13 +612,12 @@ int wc_HashInit_ex(wc_HashAlg* hash, enum wc_HashType type, void* heap,
     return ret;
 }
 
-int wc_HashInit(wc_HashAlg* hash, enum wc_HashType type)
+int wc_HashInit(wc_HashAlg *hash : itype(_Ptr<wc_HashAlg>), enum wc_HashType type)
 {
     return wc_HashInit_ex(hash, type, NULL, INVALID_DEVID);
 }
 
-int wc_HashUpdate(wc_HashAlg* hash, enum wc_HashType type, const byte* data,
-                  word32 dataSz)
+int wc_HashUpdate(wc_HashAlg *hash : itype(_Ptr<wc_HashAlg>), enum wc_HashType type, const byte *data, word32 dataSz)
 {
     int ret = HASH_TYPE_E; /* Default to hash type error */
 
@@ -694,7 +691,7 @@ int wc_HashUpdate(wc_HashAlg* hash, enum wc_HashType type, const byte* data,
     return ret;
 }
 
-int wc_HashFinal(wc_HashAlg* hash, enum wc_HashType type, byte* out)
+int wc_HashFinal(wc_HashAlg *hash : itype(_Ptr<wc_HashAlg>), enum wc_HashType type, byte *out)
 {
     int ret = HASH_TYPE_E; /* Default to hash type error */
 
@@ -768,7 +765,7 @@ int wc_HashFinal(wc_HashAlg* hash, enum wc_HashType type, byte* out)
     return ret;
 }
 
-int wc_HashFree(wc_HashAlg* hash, enum wc_HashType type)
+int wc_HashFree(wc_HashAlg *hash : itype(_Ptr<wc_HashAlg>), enum wc_HashType type)
 {
     int ret = HASH_TYPE_E; /* Default to hash type error */
 
@@ -981,7 +978,7 @@ int wc_HashGetFlags(wc_HashAlg* hash, enum wc_HashType type, word32* flags)
 #if !defined(WOLFSSL_TI_HASH)
 
 #if !defined(NO_MD5)
-    int wc_Md5Hash(const byte* data, word32 len, byte* hash)
+    int wc_Md5Hash(const byte *data, word32 len, byte *hash)
     {
         int ret;
     #ifdef WOLFSSL_SMALL_STACK
@@ -1018,7 +1015,7 @@ int wc_HashGetFlags(wc_HashAlg* hash, enum wc_HashType type, word32* flags)
 #endif /* !NO_MD5 */
 
 #if !defined(NO_SHA)
-    int wc_ShaHash(const byte* data, word32 len, byte* hash)
+    int wc_ShaHash(const byte *data, word32 len, byte *hash)
     {
         int ret = 0;
     #ifdef WOLFSSL_SMALL_STACK
@@ -1093,7 +1090,7 @@ int wc_HashGetFlags(wc_HashAlg* hash, enum wc_HashType type, word32* flags)
 #endif /* WOLFSSL_SHA224 */
 
 #if !defined(NO_SHA256)
-    int wc_Sha256Hash(const byte* data, word32 len, byte* hash)
+    int wc_Sha256Hash(const byte *data, word32 len, byte *hash)
     {
         int ret = 0;
     #ifdef WOLFSSL_SMALL_STACK
@@ -1414,9 +1411,7 @@ int wc_HashGetFlags(wc_HashAlg* hash, enum wc_HashType type, word32* flags)
 #endif
 
 /* Pseudo Random Function for MD5, SHA-1, SHA-256, or SHA-384 */
-int wc_PRF(byte* result, word32 resLen, const byte* secret,
-                  word32 secLen, const byte* seed, word32 seedLen, int hash,
-                  void* heap, int devId)
+int wc_PRF(byte *result, word32 resLen, const byte *secret, word32 secLen, const byte *seed, word32 seedLen, int hash, void *heap, int devId)
 {
     word32 len = P_HASH_MAX_SIZE;
     word32 times;
@@ -1540,9 +1535,7 @@ int wc_PRF(byte* result, word32 resLen, const byte* secret,
 #undef P_HASH_MAX_SIZE
 
 /* compute PRF (pseudo random function) using SHA1 and MD5 for TLSv1 */
-int wc_PRF_TLSv1(byte* digest, word32 digLen, const byte* secret,
-           word32 secLen, const byte* label, word32 labLen,
-           const byte* seed, word32 seedLen, void* heap, int devId)
+int wc_PRF_TLSv1(byte *digest, word32 digLen, const byte *secret, word32 secLen, const byte *label, word32 labLen, const byte *seed, word32 seedLen, void *heap, int devId)
 {
     int    ret  = 0;
     word32 half = (secLen + 1) / 2;
@@ -1631,9 +1624,7 @@ int wc_PRF_TLSv1(byte* digest, word32 digLen, const byte* secret,
 
 /* Wrapper for TLS 1.2 and TLSv1 cases to calculate PRF */
 /* In TLS 1.2 case call straight thru to wc_PRF */
-int wc_PRF_TLS(byte* digest, word32 digLen, const byte* secret, word32 secLen,
-            const byte* label, word32 labLen, const byte* seed, word32 seedLen,
-            int useAtLeastSha256, int hash_type, void* heap, int devId)
+int wc_PRF_TLS(byte *digest, word32 digLen, const byte *secret, word32 secLen, const byte *label, word32 labLen, const byte *seed, word32 seedLen, int useAtLeastSha256, int hash_type, void *heap, int devId)
 {
     int ret = 0;
 

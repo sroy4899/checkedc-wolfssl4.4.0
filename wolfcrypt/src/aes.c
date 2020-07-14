@@ -1615,7 +1615,7 @@ static WC_INLINE word32 PreFetchSBox(void)
 #endif
 
 /* Software AES - ECB Encrypt */
-static void wc_AesEncrypt(Aes* aes, const byte* inBlock, byte* outBlock)
+static void wc_AesEncrypt(_Ptr<Aes> aes, const byte *inBlock, byte *outBlock)
 {
     word32 s0, s1, s2, s3;
     word32 t0, t1, t2, t3;
@@ -1920,7 +1920,7 @@ static WC_INLINE word32 PreFetchTd4(void)
 }
 
 /* Software AES - ECB Decrypt */
-static void wc_AesDecrypt(Aes* aes, const byte* inBlock, byte* outBlock)
+static void wc_AesDecrypt(_Ptr<Aes> aes, const byte *inBlock, byte *outBlock)
 {
     word32 s0, s1, s2, s3;
     word32 t0, t1, t2, t3;
@@ -2519,8 +2519,7 @@ static void wc_AesDecrypt(Aes* aes, const byte* inBlock, byte* outBlock)
 #else
 
     /* Software AES - SetKey */
-    static int wc_AesSetKeyLocal(Aes* aes, const byte* userKey, word32 keylen,
-                const byte* iv, int dir)
+    static int wc_AesSetKeyLocal(_Ptr<Aes> aes, const byte *userKey, word32 keylen, const byte *iv, int dir)
     {
         word32 *rk = aes->key;
     #ifdef NEED_AES_TABLES
@@ -2715,8 +2714,7 @@ static void wc_AesDecrypt(Aes* aes, const byte* inBlock, byte* outBlock)
         return wc_AesSetIV(aes, iv);
     }
 
-    int wc_AesSetKey(Aes* aes, const byte* userKey, word32 keylen,
-        const byte* iv, int dir)
+    int wc_AesSetKey(Aes *aes : itype(_Ptr<Aes>), const byte *userKey, word32 keylen, const byte *iv, int dir)
     {
         int ret;
     #if defined(AES_MAX_KEY_SIZE)
@@ -2837,7 +2835,7 @@ static void wc_AesDecrypt(Aes* aes, const byte* inBlock, byte* outBlock)
 
 
 /* wc_AesSetIV is shared between software and hardware */
-int wc_AesSetIV(Aes* aes, const byte* iv)
+int wc_AesSetIV(_Ptr<Aes> aes, const byte *iv)
 {
     if (aes == NULL)
         return BAD_FUNC_ARG;
@@ -3531,7 +3529,7 @@ int wc_AesSetIV(Aes* aes, const byte* iv)
 #else
 
     /* Software AES - CBC Encrypt */
-    int wc_AesCbcEncrypt(Aes* aes, byte* out, const byte* in, word32 sz)
+    int wc_AesCbcEncrypt(Aes *aes : itype(_Ptr<Aes>), byte *out, const byte *in, word32 sz)
     {
         word32 blocks = (sz / AES_BLOCK_SIZE);
 
@@ -3629,7 +3627,7 @@ int wc_AesSetIV(Aes* aes, const byte* iv)
 
     #ifdef HAVE_AES_DECRYPT
     /* Software AES - CBC Decrypt */
-    int wc_AesCbcDecrypt(Aes* aes, byte* out, const byte* in, word32 sz)
+    int wc_AesCbcDecrypt(Aes *aes : itype(_Ptr<Aes>), byte *out, const byte *in, word32 sz)
     {
         word32 blocks;
 
@@ -7444,7 +7442,7 @@ int wc_AesCcmEncrypt_ex(Aes* aes, byte* out, const byte* in, word32 sz,
 
 
 /* Initialize Aes for use with async hardware */
-int wc_AesInit(Aes* aes, void* heap, int devId)
+int wc_AesInit(Aes *aes : itype(_Ptr<Aes>), void *heap, int devId)
 {
     int ret = 0;
 
@@ -7506,7 +7504,7 @@ int  wc_AesInit_Id(Aes* aes, unsigned char* id, int len, void* heap, int devId)
 #endif
 
 /* Free Aes from use with async hardware */
-void wc_AesFree(Aes* aes)
+void wc_AesFree(Aes *aes : itype(_Ptr<Aes>))
 {
     if (aes == NULL)
         return;
@@ -7534,7 +7532,7 @@ void wc_AesFree(Aes* aes)
 }
 
 
-int wc_AesGetKeySize(Aes* aes, word32* keySize)
+int wc_AesGetKeySize(_Ptr<Aes> aes, _Ptr<word32> keySize)
 {
     int ret = 0;
 

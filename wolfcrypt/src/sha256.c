@@ -166,7 +166,7 @@
     (!defined(WOLFSSL_ESP32WROOM32_CRYPT) || defined(NO_WOLFSSL_ESP32WROOM32_CRYPT_HASH)) && \
     (!defined(WOLFSSL_RENESAS_TSIP_CRYPT) || defined(NO_WOLFSSL_RENESAS_TSIP_HASH))
 
-static int InitSha256(wc_Sha256* sha256)
+static int InitSha256(_Ptr<wc_Sha256> sha256)
 {
     int ret = 0;
 
@@ -666,7 +666,7 @@ static int InitSha256(wc_Sha256* sha256)
 #else
     #define NEED_SOFT_SHA256
 
-    int wc_InitSha256_ex(wc_Sha256* sha256, void* heap, int devId)
+    int wc_InitSha256_ex(_Ptr<wc_Sha256> sha256, void *heap, int devId)
     {
         int ret = 0;
         if (sha256 == NULL)
@@ -754,7 +754,7 @@ static int InitSha256(wc_Sha256* sha256)
          d(j) += t0; \
          h(j)  = t0 + t1
 
-    static int Transform_Sha256(wc_Sha256* sha256, const byte* data)
+    static int Transform_Sha256(_Ptr<wc_Sha256> sha256, const byte *data)
     {
         word32 S[8], t0, t1;
         int i;
@@ -883,7 +883,7 @@ static int InitSha256(wc_Sha256* sha256)
 
 #ifdef XTRANSFORM
 
-    static WC_INLINE void AddLength(wc_Sha256* sha256, word32 len)
+    static void AddLength(_Ptr<wc_Sha256> sha256, word32 len)
     {
         word32 tmp = sha256->loLen;
         if ((sha256->loLen += len) < tmp) {
@@ -892,7 +892,7 @@ static int InitSha256(wc_Sha256* sha256)
     }
 
     /* do block size increments/updates */
-    static WC_INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 len)
+    static int Sha256Update(_Ptr<wc_Sha256> sha256, const byte *data, word32 len)
     {
         int ret = 0;
         word32 blocksLen;
@@ -1038,7 +1038,7 @@ static int InitSha256(wc_Sha256* sha256)
         return ret;
     }
 
-    int wc_Sha256Update(wc_Sha256* sha256, const byte* data, word32 len)
+    int wc_Sha256Update(wc_Sha256 *sha256 : itype(_Ptr<wc_Sha256>), const byte *data, word32 len)
     {
         if (sha256 == NULL || (data == NULL && len > 0)) {
             return BAD_FUNC_ARG;
@@ -1068,7 +1068,7 @@ static int InitSha256(wc_Sha256* sha256)
         return Sha256Update(sha256, data, len);
     }
 
-    static WC_INLINE int Sha256Final(wc_Sha256* sha256)
+    static int Sha256Final(_Ptr<wc_Sha256> sha256)
     {
 
         int ret;
@@ -1169,7 +1169,7 @@ static int InitSha256(wc_Sha256* sha256)
         return ret;
     }
 
-    int wc_Sha256FinalRaw(wc_Sha256* sha256, byte* hash)
+    int wc_Sha256FinalRaw(_Ptr<wc_Sha256> sha256, byte *hash)
     {
     #ifdef LITTLE_ENDIAN_ORDER
         word32 digest[WC_SHA256_DIGEST_SIZE / sizeof(word32)];
@@ -1190,7 +1190,7 @@ static int InitSha256(wc_Sha256* sha256)
         return 0;
     }
 
-    int wc_Sha256Final(wc_Sha256* sha256, byte* hash)
+    int wc_Sha256Final(wc_Sha256 *sha256 : itype(_Ptr<wc_Sha256>), byte *hash)
     {
         int ret;
 
@@ -1440,12 +1440,12 @@ static int InitSha256(wc_Sha256* sha256)
 #endif /* WOLFSSL_SHA224 */
 
 
-int wc_InitSha256(wc_Sha256* sha256)
+int wc_InitSha256(wc_Sha256 *sha256 : itype(_Ptr<wc_Sha256>))
 {
     return wc_InitSha256_ex(sha256, NULL, INVALID_DEVID);
 }
 
-void wc_Sha256Free(wc_Sha256* sha256)
+void wc_Sha256Free(wc_Sha256 *sha256 : itype(_Ptr<wc_Sha256>))
 {
     if (sha256 == NULL)
         return;
@@ -1561,7 +1561,7 @@ void wc_Sha256Free(wc_Sha256* sha256)
     /* implemented in wolfcrypt/src/port/Renesas/renesas_tsip_sha.c */
 #else
 
-int wc_Sha256GetHash(wc_Sha256* sha256, byte* hash)
+int wc_Sha256GetHash(wc_Sha256 *sha256, byte *hash)
 {
     int ret;
     wc_Sha256 tmpSha256;
@@ -1591,7 +1591,7 @@ int wc_Sha256GetHash(wc_Sha256* sha256, byte* hash)
     }
     return ret;
 }
-int wc_Sha256Copy(wc_Sha256* src, wc_Sha256* dst)
+int wc_Sha256Copy(wc_Sha256 *src, wc_Sha256 *dst)
 {
     int ret = 0;
 

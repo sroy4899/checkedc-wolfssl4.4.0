@@ -300,9 +300,7 @@ static int wc_RNG_HealthTestLocal(int reseed);
 
 /* Hash Derivation Function */
 /* Returns: DRBG_SUCCESS or DRBG_FAILURE */
-static int Hash_df(DRBG* drbg, byte* out, word32 outSz, byte type,
-                                                  const byte* inA, word32 inASz,
-                                                  const byte* inB, word32 inBSz)
+static int Hash_df(DRBG *drbg : itype(_Ptr<DRBG>), byte *out, word32 outSz, byte type, const byte *inA, word32 inASz, const byte *inB, word32 inBSz)
 {
     int ret = DRBG_FAILURE;
     byte ctr;
@@ -389,7 +387,7 @@ static int Hash_df(DRBG* drbg, byte* out, word32 outSz, byte type,
 }
 
 /* Returns: DRBG_SUCCESS or DRBG_FAILURE */
-static int Hash_DRBG_Reseed(DRBG* drbg, const byte* seed, word32 seedSz)
+static int Hash_DRBG_Reseed(DRBG *drbg : itype(_Ptr<DRBG>), const byte *seed, word32 seedSz)
 {
     byte newV[DRBG_SEED_LEN];
 
@@ -415,7 +413,7 @@ static int Hash_DRBG_Reseed(DRBG* drbg, const byte* seed, word32 seedSz)
 }
 
 /* Returns: DRBG_SUCCESS and DRBG_FAILURE or BAD_FUNC_ARG on fail */
-int wc_RNG_DRBG_Reseed(WC_RNG* rng, const byte* seed, word32 seedSz)
+int wc_RNG_DRBG_Reseed(_Ptr<WC_RNG> rng, const byte *seed, word32 seedSz)
 {
     if (rng == NULL || seed == NULL) {
         return BAD_FUNC_ARG;
@@ -424,7 +422,7 @@ int wc_RNG_DRBG_Reseed(WC_RNG* rng, const byte* seed, word32 seedSz)
     return Hash_DRBG_Reseed(rng->drbg, seed, seedSz);
 }
 
-static WC_INLINE void array_add_one(byte* data, word32 dataSz)
+static void array_add_one(byte *data, word32 dataSz)
 {
     int i;
 
@@ -436,7 +434,7 @@ static WC_INLINE void array_add_one(byte* data, word32 dataSz)
 }
 
 /* Returns: DRBG_SUCCESS or DRBG_FAILURE */
-static int Hash_gen(DRBG* drbg, byte* out, word32 outSz, const byte* V)
+static int Hash_gen(_Ptr<DRBG> drbg, byte *out, word32 outSz, const byte *V)
 {
     int ret = DRBG_FAILURE;
     byte data[DRBG_SEED_LEN];
@@ -521,7 +519,7 @@ static int Hash_gen(DRBG* drbg, byte* out, word32 outSz, const byte* V)
     return (ret == 0) ? DRBG_SUCCESS : DRBG_FAILURE;
 }
 
-static WC_INLINE void array_add(byte* d, word32 dLen, const byte* s, word32 sLen)
+static void array_add(byte *d, word32 dLen, const byte *s, word32 sLen)
 {
     word16 carry = 0;
 
@@ -544,7 +542,7 @@ static WC_INLINE void array_add(byte* d, word32 dLen, const byte* s, word32 sLen
 }
 
 /* Returns: DRBG_SUCCESS, DRBG_NEED_RESEED, or DRBG_FAILURE */
-static int Hash_DRBG_Generate(DRBG* drbg, byte* out, word32 outSz)
+static int Hash_DRBG_Generate(DRBG *drbg : itype(_Ptr<DRBG>), byte *out, word32 outSz)
 {
     int ret;
 #ifdef WOLFSSL_SMALL_STACK_CACHE
@@ -610,9 +608,7 @@ static int Hash_DRBG_Generate(DRBG* drbg, byte* out, word32 outSz)
 }
 
 /* Returns: DRBG_SUCCESS or DRBG_FAILURE */
-static int Hash_DRBG_Instantiate(DRBG* drbg, const byte* seed, word32 seedSz,
-                                             const byte* nonce, word32 nonceSz,
-                                             void* heap, int devId)
+static int Hash_DRBG_Instantiate(DRBG *drbg, const byte *seed, word32 seedSz, const byte *nonce, word32 nonceSz, void *heap, int devId)
 {
     int ret;
 
@@ -653,7 +649,7 @@ static int Hash_DRBG_Instantiate(DRBG* drbg, const byte* seed, word32 seedSz,
 }
 
 /* Returns: DRBG_SUCCESS or DRBG_FAILURE */
-static int Hash_DRBG_Uninstantiate(DRBG* drbg)
+static int Hash_DRBG_Uninstantiate(DRBG *drbg)
 {
     word32 i;
     int    compareSum = 0;
@@ -672,7 +668,7 @@ static int Hash_DRBG_Uninstantiate(DRBG* drbg)
 }
 
 
-int wc_RNG_TestSeed(const byte* seed, word32 seedSz)
+int wc_RNG_TestSeed(const byte *seed, word32 seedSz)
 {
     int ret = DRBG_SUCCESS;
 
@@ -697,8 +693,7 @@ int wc_RNG_TestSeed(const byte* seed, word32 seedSz)
 /* End NIST DRBG Code */
 
 
-static int _InitRng(WC_RNG* rng, byte* nonce, word32 nonceSz,
-                    void* heap, int devId)
+static int _InitRng(WC_RNG *rng : itype(_Ptr<WC_RNG>), byte *nonce, word32 nonceSz, void *heap, int devId)
 {
     int ret = RNG_FAILURE_E;
 #ifdef HAVE_HASHDRBG
@@ -835,7 +830,7 @@ static int _InitRng(WC_RNG* rng, byte* nonce, word32 nonceSz,
 
 
 WOLFSSL_ABI
-WC_RNG* wc_rng_new(byte* nonce, word32 nonceSz, void* heap)
+WC_RNG * wc_rng_new(byte *nonce, word32 nonceSz, void *heap)
 {
     WC_RNG* rng;
 
@@ -853,7 +848,7 @@ WC_RNG* wc_rng_new(byte* nonce, word32 nonceSz, void* heap)
 
 
 WOLFSSL_ABI
-void wc_rng_free(WC_RNG* rng)
+void wc_rng_free(WC_RNG *rng)
 {
     if (rng) {
         void* heap = rng->heap;
@@ -866,26 +861,25 @@ void wc_rng_free(WC_RNG* rng)
 }
 
 
-int wc_InitRng(WC_RNG* rng)
+int wc_InitRng(_Ptr<WC_RNG> rng)
 {
     return _InitRng(rng, NULL, 0, NULL, INVALID_DEVID);
 }
 
 
-int wc_InitRng_ex(WC_RNG* rng, void* heap, int devId)
+int wc_InitRng_ex(_Ptr<WC_RNG> rng, void *heap, int devId)
 {
     return _InitRng(rng, NULL, 0, heap, devId);
 }
 
 
-int wc_InitRngNonce(WC_RNG* rng, byte* nonce, word32 nonceSz)
+int wc_InitRngNonce(_Ptr<WC_RNG> rng, byte *nonce, word32 nonceSz)
 {
     return _InitRng(rng, nonce, nonceSz, NULL, INVALID_DEVID);
 }
 
 
-int wc_InitRngNonce_ex(WC_RNG* rng, byte* nonce, word32 nonceSz,
-                       void* heap, int devId)
+int wc_InitRngNonce_ex(_Ptr<WC_RNG> rng, byte *nonce, word32 nonceSz, void *heap, int devId)
 {
     return _InitRng(rng, nonce, nonceSz, heap, devId);
 }
@@ -893,7 +887,7 @@ int wc_InitRngNonce_ex(WC_RNG* rng, byte* nonce, word32 nonceSz,
 
 /* place a generated block in output */
 WOLFSSL_ABI
-int wc_RNG_GenerateBlock(WC_RNG* rng, byte* output, word32 sz)
+int wc_RNG_GenerateBlock(_Ptr<WC_RNG> rng, byte *output, word32 sz)
 {
     int ret;
 
@@ -986,13 +980,13 @@ int wc_RNG_GenerateBlock(WC_RNG* rng, byte* output, word32 sz)
 }
 
 
-int wc_RNG_GenerateByte(WC_RNG* rng, byte* b)
+int wc_RNG_GenerateByte(_Ptr<WC_RNG> rng, byte *b)
 {
     return wc_RNG_GenerateBlock(rng, b, 1);
 }
 
 
-int wc_FreeRng(WC_RNG* rng)
+int wc_FreeRng(WC_RNG *rng : itype(_Ptr<WC_RNG>))
 {
     int ret = 0;
 
@@ -1021,9 +1015,7 @@ int wc_FreeRng(WC_RNG* rng)
 }
 
 #ifdef HAVE_HASHDRBG
-int wc_RNG_HealthTest(int reseed, const byte* seedA, word32 seedASz,
-                                  const byte* seedB, word32 seedBSz,
-                                  byte* output, word32 outputSz)
+int wc_RNG_HealthTest(int reseed, const byte *seedA, word32 seedASz, const byte *seedB, word32 seedBSz, byte *output, word32 outputSz)
 {
     return wc_RNG_HealthTest_ex(reseed, NULL, 0,
                                 seedA, seedASz, seedB, seedBSz,
@@ -1032,11 +1024,7 @@ int wc_RNG_HealthTest(int reseed, const byte* seedA, word32 seedASz,
 }
 
 
-int wc_RNG_HealthTest_ex(int reseed, const byte* nonce, word32 nonceSz,
-                                  const byte* seedA, word32 seedASz,
-                                  const byte* seedB, word32 seedBSz,
-                                  byte* output, word32 outputSz,
-                                  void* heap, int devId)
+int wc_RNG_HealthTest_ex(int reseed, const byte *nonce, word32 nonceSz, const byte *seedA, word32 seedASz, const byte *seedB, word32 seedBSz, byte *output, word32 outputSz, void *heap, int devId)
 {
     int ret = -1;
     DRBG* drbg;
@@ -2456,7 +2444,7 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 #else
 
     /* may block */
-    int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
+    int wc_GenerateSeed(_Ptr<OS_Seed> os, byte *output, word32 sz)
     {
         int ret = 0;
 

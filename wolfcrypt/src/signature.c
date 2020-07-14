@@ -49,8 +49,7 @@
 #ifndef NO_SIG_WRAPPER
 
 #if !defined(NO_RSA) && !defined(NO_ASN)
-static int wc_SignatureDerEncode(enum wc_HashType hash_type, byte* hash_data,
-    word32 hash_len, word32* hash_enc_len)
+static int wc_SignatureDerEncode(enum wc_HashType hash_type, byte *hash_data, word32 hash_len, _Ptr<word32> hash_enc_len)
 {
     int ret, oid;
 
@@ -70,8 +69,7 @@ static int wc_SignatureDerEncode(enum wc_HashType hash_type, byte* hash_data,
 }
 #endif /* !NO_RSA && !NO_ASN */
 
-int wc_SignatureGetSize(enum wc_SignatureType sig_type,
-    const void* key, word32 key_len)
+int wc_SignatureGetSize(enum wc_SignatureType sig_type, const void *key, word32 key_len)
 {
     int sig_len = BAD_FUNC_ARG;
 
@@ -117,11 +115,7 @@ int wc_SignatureGetSize(enum wc_SignatureType sig_type,
     return sig_len;
 }
 
-int wc_SignatureVerifyHash(
-    enum wc_HashType hash_type, enum wc_SignatureType sig_type,
-    const byte* hash_data, word32 hash_len,
-    const byte* sig, word32 sig_len,
-    const void* key, word32 key_len)
+int wc_SignatureVerifyHash(enum wc_HashType hash_type, enum wc_SignatureType sig_type, const byte *hash_data, word32 hash_len, const byte *sig, word32 sig_len, const void *key, word32 key_len)
 {
     int ret;
 
@@ -244,11 +238,7 @@ int wc_SignatureVerifyHash(
     return ret;
 }
 
-int wc_SignatureVerify(
-    enum wc_HashType hash_type, enum wc_SignatureType sig_type,
-    const byte* data, word32 data_len,
-    const byte* sig, word32 sig_len,
-    const void* key, word32 key_len)
+int wc_SignatureVerify(enum wc_HashType hash_type, enum wc_SignatureType sig_type, const byte *data, word32 data_len, const byte *sig, word32 sig_len, const void *key, word32 key_len)
 {
     int ret;
     word32 hash_len, hash_enc_len;
@@ -336,21 +326,13 @@ int wc_SignatureVerify(
 }
 
 
-int wc_SignatureGenerateHash(
-    enum wc_HashType hash_type, enum wc_SignatureType sig_type,
-    const byte* hash_data, word32 hash_len,
-    byte* sig, word32 *sig_len,
-    const void* key, word32 key_len, WC_RNG* rng)
+int wc_SignatureGenerateHash(enum wc_HashType hash_type, enum wc_SignatureType sig_type, const byte *hash_data, word32 hash_len, byte *sig, _Ptr<word32> sig_len, const void *key, word32 key_len, _Ptr<WC_RNG> rng)
 {
     return wc_SignatureGenerateHash_ex(hash_type, sig_type, hash_data, hash_len,
         sig, sig_len, key, key_len, rng, 1);
 }
 
-int wc_SignatureGenerateHash_ex(
-    enum wc_HashType hash_type, enum wc_SignatureType sig_type,
-    const byte* hash_data, word32 hash_len,
-    byte* sig, word32 *sig_len,
-    const void* key, word32 key_len, WC_RNG* rng, int verify)
+int wc_SignatureGenerateHash_ex(enum wc_HashType hash_type, enum wc_SignatureType sig_type, const byte *hash_data, word32 hash_len, byte *sig, _Ptr<word32> sig_len, const void *key, word32 key_len, _Ptr<WC_RNG> rng, int verify)
 {
     int ret;
 
@@ -444,21 +426,13 @@ int wc_SignatureGenerateHash_ex(
     return ret;
 }
 
-int wc_SignatureGenerate(
-    enum wc_HashType hash_type, enum wc_SignatureType sig_type,
-    const byte* data, word32 data_len,
-    byte* sig, word32 *sig_len,
-    const void* key, word32 key_len, WC_RNG* rng)
+int wc_SignatureGenerate(enum wc_HashType hash_type, enum wc_SignatureType sig_type, const byte *data, word32 data_len, byte *sig, _Ptr<word32> sig_len, const void *key, word32 key_len, _Ptr<WC_RNG> rng)
 {
     return wc_SignatureGenerate_ex(hash_type, sig_type, data, data_len, sig,
         sig_len, key, key_len, rng, 1);
 }
 
-int wc_SignatureGenerate_ex(
-    enum wc_HashType hash_type, enum wc_SignatureType sig_type,
-    const byte* data, word32 data_len,
-    byte* sig, word32 *sig_len,
-    const void* key, word32 key_len, WC_RNG* rng, int verify)
+int wc_SignatureGenerate_ex(enum wc_HashType hash_type, enum wc_SignatureType sig_type, const byte *data, word32 data_len, byte *sig, _Ptr<word32> sig_len, const void *key, word32 key_len, _Ptr<WC_RNG> rng, int verify)
 {
     int ret;
     word32 hash_len, hash_enc_len;

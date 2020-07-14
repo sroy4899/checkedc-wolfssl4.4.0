@@ -69,7 +69,7 @@ static word32 RABBIT_g_func(word32 x)
 
 
 /* Calculate the next internal state */
-static void RABBIT_next_state(RabbitCtx* ctx)
+static void RABBIT_next_state(_Ptr<RabbitCtx> ctx)
 {
     /* Temporary variables */
     word32 g[8], c_old[8], i;
@@ -106,7 +106,7 @@ static void RABBIT_next_state(RabbitCtx* ctx)
 
 
 /* IV setup */
-static void wc_RabbitSetIV(Rabbit* ctx, const byte* inIv)
+static void wc_RabbitSetIV(_Ptr<Rabbit> ctx, const byte *inIv)
 {
     /* Temporary variables */
     word32 i0, i1, i2, i3, i;
@@ -145,7 +145,7 @@ static void wc_RabbitSetIV(Rabbit* ctx, const byte* inIv)
 
 
 /* Key setup */
-static WC_INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
+static int DoKey(_Ptr<Rabbit> ctx, const byte *key, const byte *iv)
 {
     /* Temporary variables */
     word32 k0, k1, k2, k3, i;
@@ -200,7 +200,7 @@ static WC_INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
 }
 
 
-int wc_Rabbit_SetHeap(Rabbit* ctx, void* heap)
+int wc_Rabbit_SetHeap(_Ptr<Rabbit> ctx, void *heap)
 {
     if (ctx == NULL) {
         return BAD_FUNC_ARG;
@@ -216,7 +216,7 @@ int wc_Rabbit_SetHeap(Rabbit* ctx, void* heap)
 
 
 /* Key setup */
-int wc_RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
+int wc_RabbitSetKey(_Ptr<Rabbit> ctx, const byte *key, const byte *iv)
 {
     if (ctx == NULL || key == NULL) {
         return BAD_FUNC_ARG;
@@ -247,8 +247,7 @@ int wc_RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
 
 
 /* Encrypt/decrypt a message of any size */
-static WC_INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
-                            word32 msglen)
+static int DoProcess(_Ptr<Rabbit> ctx, byte *output, const byte *input, word32 msglen)
 {
     /* Encrypt/decrypt all full blocks */
     while (msglen >= 16) {
@@ -307,7 +306,7 @@ static WC_INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
 
 
 /* Encrypt/decrypt a message of any size */
-int wc_RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
+int wc_RabbitProcess(_Ptr<Rabbit> ctx, byte *output, const byte *input, word32 msglen)
 {
     if (ctx == NULL || output == NULL || input == NULL) {
         return BAD_FUNC_ARG;

@@ -37,7 +37,7 @@
 #endif
 
 
-void wc_InitMd4(Md4* md4)
+void wc_InitMd4(_Ptr<Md4> md4)
 {
     md4->digest[0] = 0x67452301L;
     md4->digest[1] = 0xefcdab89L;
@@ -50,7 +50,7 @@ void wc_InitMd4(Md4* md4)
 }
 
 
-static void Transform(Md4* md4)
+static void Transform(_Ptr<Md4> md4)
 {
 #define F(x, y, z) ((z) ^ ((x) & ((y) ^ (z))))
 #define G(x, y, z) (((x) & (y)) | ((x) & (z)) | ((y) & (z)))
@@ -130,7 +130,7 @@ static void Transform(Md4* md4)
 }
 
 
-static WC_INLINE void AddLength(Md4* md4, word32 len)
+static void AddLength(_Ptr<Md4> md4, word32 len)
 {
     word32 tmp = md4->loLen;
     if ( (md4->loLen += len) < tmp)
@@ -138,7 +138,7 @@ static WC_INLINE void AddLength(Md4* md4, word32 len)
 }
 
 
-void wc_Md4Update(Md4* md4, const byte* data, word32 len)
+void wc_Md4Update(_Ptr<Md4> md4, const byte *data, word32 len)
 {
     /* do block size increments */
     byte* local = (byte*)md4->buffer;
@@ -163,7 +163,7 @@ void wc_Md4Update(Md4* md4, const byte* data, word32 len)
 }
 
 
-void wc_Md4Final(Md4* md4, byte* hash)
+void wc_Md4Final(_Ptr<Md4> md4, byte *hash)
 {
     byte* local = (byte*)md4->buffer;
 

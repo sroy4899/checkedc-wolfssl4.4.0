@@ -319,7 +319,7 @@ int wolfCrypt_Cleanup(void)
 
 /* File Handling Helpers */
 /* returns 0 if file found, WC_READDIR_NOFILE if no files or negative error */
-int wc_ReadDirFirst(ReadDirCtx* ctx, const char* path, char** name)
+int wc_ReadDirFirst(_Ptr<ReadDirCtx> ctx, const char *path, _Ptr<char*> name)
 {
     int ret = WC_READDIR_NOFILE; /* default to no files found */
     int pathLen = 0;
@@ -467,7 +467,7 @@ int wc_ReadDirFirst(ReadDirCtx* ctx, const char* path, char** name)
 }
 
 /* returns 0 if file found, WC_READDIR_NOFILE if no more files */
-int wc_ReadDirNext(ReadDirCtx* ctx, const char* path, char** name)
+int wc_ReadDirNext(_Ptr<ReadDirCtx> ctx, const char *path, _Ptr<char*> name)
 {
     int ret = WC_READDIR_NOFILE; /* default to no file found */
     int pathLen = 0;
@@ -585,7 +585,7 @@ int wc_ReadDirNext(ReadDirCtx* ctx, const char* path, char** name)
     return ret;
 }
 
-void wc_ReadDirClose(ReadDirCtx* ctx)
+void wc_ReadDirClose(_Ptr<ReadDirCtx> ctx)
 {
     if (ctx == NULL) {
         return;
@@ -668,7 +668,7 @@ wolfSSL_Mutex* wc_InitAndAllocMutex(void)
 
 #ifdef USE_WOLF_STRTOK
 /* String token (delim) search. If str is null use nextp. */
-char* wc_strtok(char *str, const char *delim, char **nextp)
+char * wc_strtok(char *str, const char *delim, _Ptr<char*> nextp)
 {
     char* ret;
     int i, j;
@@ -721,7 +721,7 @@ char* wc_strtok(char *str, const char *delim, char **nextp)
 #endif /* USE_WOLF_STRTOK */
 
 #ifdef USE_WOLF_STRSEP
-char* wc_strsep(char **stringp, const char *delim)
+char * wc_strsep(_Ptr<char*> stringp, const char *delim)
 {
     char *s, *tok;
     const char *spanp;
@@ -946,7 +946,7 @@ int wolfSSL_CryptHwMutexUnLock(void) {
 
 #elif defined(WOLFSSL_PTHREADS)
 
-    int wc_InitMutex(wolfSSL_Mutex* m)
+    int wc_InitMutex(wolfSSL_Mutex *m)
     {
         if (pthread_mutex_init(m, 0) == 0)
             return 0;
@@ -955,7 +955,7 @@ int wolfSSL_CryptHwMutexUnLock(void) {
     }
 
 
-    int wc_FreeMutex(wolfSSL_Mutex* m)
+    int wc_FreeMutex(wolfSSL_Mutex *m)
     {
         if (pthread_mutex_destroy(m) == 0)
             return 0;
@@ -964,7 +964,7 @@ int wolfSSL_CryptHwMutexUnLock(void) {
     }
 
 
-    int wc_LockMutex(wolfSSL_Mutex* m)
+    int wc_LockMutex(wolfSSL_Mutex *m)
     {
         if (pthread_mutex_lock(m) == 0)
             return 0;
@@ -973,7 +973,7 @@ int wolfSSL_CryptHwMutexUnLock(void) {
     }
 
 
-    int wc_UnLockMutex(wolfSSL_Mutex* m)
+    int wc_UnLockMutex(wolfSSL_Mutex *m)
     {
         if (pthread_mutex_unlock(m) == 0)
             return 0;
@@ -2183,7 +2183,7 @@ time_t wiced_pseudo_unix_epoch_time(time_t * timer)
 #endif /* !NO_ASN_TIME */
 
 #ifndef WOLFSSL_LEANPSK
-char* mystrnstr(const char* s1, const char* s2, unsigned int n)
+char * mystrnstr(const char *s1, const char *s2, unsigned int n)
 {
     unsigned int s2_len = (unsigned int)XSTRLEN(s2);
 

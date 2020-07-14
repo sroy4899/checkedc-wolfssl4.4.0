@@ -45,8 +45,7 @@
 
 #if !defined(NO_AES) && defined(HAVE_AES_CBC)
 #ifdef HAVE_AES_DECRYPT
-int wc_AesCbcDecryptWithKey(byte* out, const byte* in, word32 inSz,
-                                  const byte* key, word32 keySz, const byte* iv)
+int wc_AesCbcDecryptWithKey(byte *out, const byte *in, word32 inSz, const byte *key, word32 keySz, const byte *iv)
 {
     int  ret = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -82,8 +81,7 @@ int wc_AesCbcDecryptWithKey(byte* out, const byte* in, word32 inSz,
 }
 #endif /* HAVE_AES_DECRYPT */
 
-int wc_AesCbcEncryptWithKey(byte* out, const byte* in, word32 inSz,
-                            const byte* key, word32 keySz, const byte* iv)
+int wc_AesCbcEncryptWithKey(byte *out, const byte *in, word32 inSz, const byte *key, word32 keySz, const byte *iv)
 {
     int  ret = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -117,8 +115,7 @@ int wc_AesCbcEncryptWithKey(byte* out, const byte* in, word32 inSz,
 
 
 #if !defined(NO_DES3) && !defined(WOLFSSL_TI_CRYPT)
-int wc_Des_CbcEncryptWithKey(byte* out, const byte* in, word32 sz,
-                             const byte* key, const byte* iv)
+int wc_Des_CbcEncryptWithKey(byte *out, const byte *in, word32 sz, const byte *key, const byte *iv)
 {
     int ret  = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -144,8 +141,7 @@ int wc_Des_CbcEncryptWithKey(byte* out, const byte* in, word32 sz,
     return ret;
 }
 
-int wc_Des_CbcDecryptWithKey(byte* out, const byte* in, word32 sz,
-                             const byte* key, const byte* iv)
+int wc_Des_CbcDecryptWithKey(byte *out, const byte *in, word32 sz, const byte *key, const byte *iv)
 {
     int ret  = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -172,8 +168,7 @@ int wc_Des_CbcDecryptWithKey(byte* out, const byte* in, word32 sz,
 }
 
 
-int wc_Des3_CbcEncryptWithKey(byte* out, const byte* in, word32 sz,
-                              const byte* key, const byte* iv)
+int wc_Des3_CbcEncryptWithKey(byte *out, const byte *in, word32 sz, const byte *key, const byte *iv)
 {
     int ret    = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -204,8 +199,7 @@ int wc_Des3_CbcEncryptWithKey(byte* out, const byte* in, word32 sz,
 }
 
 
-int wc_Des3_CbcDecryptWithKey(byte* out, const byte* in, word32 sz,
-                              const byte* key, const byte* iv)
+int wc_Des3_CbcDecryptWithKey(byte *out, const byte *in, word32 sz, const byte *key, const byte *iv)
 {
     int ret    = 0;
 #ifdef WOLFSSL_SMALL_STACK
@@ -370,9 +364,7 @@ int wc_BufferKeyEncrypt(EncryptedInfo* info, byte* der, word32 derSz,
  *
  * returns a negative value on fail case
  */
-int wc_CryptKey(const char* password, int passwordSz, byte* salt,
-                      int saltSz, int iterations, int id, byte* input,
-                      int length, int version, byte* cbcIv, int enc, int shaOid)
+int wc_CryptKey(const char *password, int passwordSz, byte *salt, int saltSz, int iterations, int id, byte *input, int length, int version, byte *cbcIv, int enc, int shaOid)
 {
     int typeH;
     int derivedLen = 0;

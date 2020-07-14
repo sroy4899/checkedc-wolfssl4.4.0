@@ -42,7 +42,7 @@
     #include <wolfcrypt/src/misc.c>
 #endif
 
-int wc_InitDsaKey(DsaKey* key)
+int wc_InitDsaKey(_Ptr<DsaKey> key)
 {
     if (key == NULL)
         return BAD_FUNC_ARG;
@@ -64,7 +64,7 @@ int wc_InitDsaKey(DsaKey* key)
 }
 
 
-int wc_InitDsaKey_h(DsaKey* key, void* h)
+int wc_InitDsaKey_h(_Ptr<DsaKey> key, void *h)
 {
     int ret = wc_InitDsaKey(key);
     if (ret == 0)
@@ -74,7 +74,7 @@ int wc_InitDsaKey_h(DsaKey* key, void* h)
 }
 
 
-void wc_FreeDsaKey(DsaKey* key)
+void wc_FreeDsaKey(_Ptr<DsaKey> key)
 {
     if (key == NULL)
         return;
@@ -417,8 +417,7 @@ int wc_MakeDsaParameters(WC_RNG *rng, int modulus_size, DsaKey *dsa)
 #endif /* WOLFSSL_KEY_GEN */
 
 
-static int _DsaImportParamsRaw(DsaKey* dsa, const char* p, const char* q,
-                          const char* g, int trusted, WC_RNG* rng)
+static int _DsaImportParamsRaw(_Ptr<DsaKey> dsa, const char *p, const char *q, const char *g, int trusted, _Ptr<WC_RNG> rng)
 {
     int err;
     word32 pSz, qSz;
@@ -481,8 +480,7 @@ static int _DsaImportParamsRaw(DsaKey* dsa, const char* p, const char* q,
  *
  * returns 0 on success, negative upon failure
  */
-int wc_DsaImportParamsRaw(DsaKey* dsa, const char* p, const char* q,
-                          const char* g)
+int wc_DsaImportParamsRaw(_Ptr<DsaKey> dsa, const char *p, const char *q, const char *g)
 {
     return _DsaImportParamsRaw(dsa, p, q, g, 1, NULL);
 }
@@ -504,8 +502,7 @@ int wc_DsaImportParamsRaw(DsaKey* dsa, const char* p, const char* q,
  *
  * returns 0 on success, negative upon failure
  */
-int wc_DsaImportParamsRawCheck(DsaKey* dsa, const char* p, const char* q,
-                          const char* g, int trusted, WC_RNG* rng)
+int wc_DsaImportParamsRawCheck(_Ptr<DsaKey> dsa, const char *p, const char *q, const char *g, int trusted, _Ptr<WC_RNG> rng)
 {
     return _DsaImportParamsRaw(dsa, p, q, g, trusted, rng);
 }
@@ -527,8 +524,7 @@ int wc_DsaImportParamsRawCheck(DsaKey* dsa, const char* p, const char* q,
  *
  * returns 0 on success, negative upon failure
  */
-int wc_DsaExportParamsRaw(DsaKey* dsa, byte* p, word32* pSz,
-                          byte* q, word32* qSz, byte* g, word32* gSz)
+int wc_DsaExportParamsRaw(_Ptr<DsaKey> dsa, byte *p, _Ptr<word32> pSz, byte *q, _Ptr<word32> qSz, byte *g, _Ptr<word32> gSz)
 {
     int err;
     word32 pLen, qLen, gLen;
@@ -604,7 +600,7 @@ int wc_DsaExportParamsRaw(DsaKey* dsa, byte* p, word32* pSz,
  *
  * returns 0 on success, negative upon failure
  */
-int wc_DsaExportKeyRaw(DsaKey* dsa, byte* x, word32* xSz, byte* y, word32* ySz)
+int wc_DsaExportKeyRaw(_Ptr<DsaKey> dsa, byte *x, _Ptr<word32> xSz, byte *y, _Ptr<word32> ySz)
 {
     int err;
     word32 xLen, yLen;
@@ -652,13 +648,13 @@ int wc_DsaExportKeyRaw(DsaKey* dsa, byte* x, word32* xSz, byte* y, word32* ySz)
 }
 
 
-int wc_DsaSign(const byte* digest, byte* out, DsaKey* key, WC_RNG* rng)
+int wc_DsaSign(const byte *digest, byte *out, _Ptr<DsaKey> key, _Ptr<WC_RNG> rng)
 {
     mp_int  k, kInv, r, s, H;
 #ifndef WOLFSSL_MP_INVMOD_CONSTANT_TIME
     mp_int  b;
 #endif
-    mp_int* qMinus1;
+    _Ptr<mp_int> qMinus1 = ((void *)0);
     int     ret = 0, sz;
     byte    buffer[DSA_HALF_SIZE];
     byte*   tmp;  /* initial output pointer */
@@ -845,7 +841,7 @@ int wc_DsaSign(const byte* digest, byte* out, DsaKey* key, WC_RNG* rng)
 }
 
 
-int wc_DsaVerify(const byte* digest, const byte* sig, DsaKey* key, int* answer)
+int wc_DsaVerify(const byte *digest, const byte *sig, _Ptr<DsaKey> key, _Ptr<int> answer)
 {
     mp_int w, u1, u2, v, r, s;
     int    ret = 0;

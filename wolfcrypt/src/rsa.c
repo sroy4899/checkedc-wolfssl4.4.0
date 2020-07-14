@@ -226,7 +226,7 @@ enum {
 };
 
 
-static void wc_RsaCleanup(RsaKey* key)
+static void wc_RsaCleanup(_Ptr<RsaKey> key)
 {
 #ifndef WOLFSSL_RSA_VERIFY_INLINE
     if (key && key->data) {
@@ -249,7 +249,7 @@ static void wc_RsaCleanup(RsaKey* key)
 #endif
 }
 
-int wc_InitRsaKey_ex(RsaKey* key, void* heap, int devId)
+int wc_InitRsaKey_ex(RsaKey *key, void *heap, int devId)
 {
     int ret = 0;
 
@@ -330,7 +330,7 @@ int wc_InitRsaKey_ex(RsaKey* key, void* heap, int devId)
     return ret;
 }
 
-int wc_InitRsaKey(RsaKey* key, void* heap)
+int wc_InitRsaKey(RsaKey *key, void *heap)
 {
     return wc_InitRsaKey_ex(key, heap, INVALID_DEVID);
 }
@@ -509,7 +509,7 @@ static int cc310_RSA_GenerateKeyPair(RsaKey* key, int size, long e)
 }
 #endif /* WOLFSSL_CRYPTOCELL */
 
-int wc_FreeRsaKey(RsaKey* key)
+int wc_FreeRsaKey(RsaKey *key : itype(_Ptr<RsaKey>))
 {
     int ret = 0;
 
@@ -769,8 +769,7 @@ int wc_CheckRsaKey(RsaKey* key)
    outSz: size of output buffer
  */
 #if !defined(NO_SHA) || !defined(NO_SHA256) || defined(WOLFSSL_SHA384) || defined(WOLFSSL_SHA512)
-static int RsaMGF1(enum wc_HashType hType, byte* seed, word32 seedSz,
-                                        byte* out, word32 outSz, void* heap)
+static int RsaMGF1(enum wc_HashType hType, byte *seed, word32 seedSz, byte *out, word32 outSz, void *heap)
 {
     byte* tmp;
     /* needs to be large enough for seed size plus counter(4) */
@@ -847,8 +846,7 @@ static int RsaMGF1(enum wc_HashType hType, byte* seed, word32 seedSz,
 /* helper function to direct which mask generation function is used
    switched on type input
  */
-static int RsaMGF(int type, byte* seed, word32 seedSz, byte* out,
-                                                    word32 outSz, void* heap)
+static int RsaMGF(int type, byte *seed, word32 seedSz, byte *out, word32 outSz, void *heap)
 {
     int ret;
 
@@ -899,10 +897,7 @@ static int RsaMGF(int type, byte* seed, word32 seedSz, byte* out,
 #ifndef WOLFSSL_RSA_VERIFY_ONLY
 #ifndef WC_NO_RNG
 #ifndef WC_NO_RSA_OAEP
-static int RsaPad_OAEP(const byte* input, word32 inputLen, byte* pkcsBlock,
-        word32 pkcsBlockLen, byte padValue, WC_RNG* rng,
-        enum wc_HashType hType, int mgf, byte* optLabel, word32 labelLen,
-        void* heap)
+static int RsaPad_OAEP(const byte *input, word32 inputLen, byte *pkcsBlock, word32 pkcsBlockLen, byte padValue, _Ptr<WC_RNG> rng, enum wc_HashType hType, int mgf, byte *optLabel, word32 labelLen, void *heap)
 {
     int ret;
     int hLen;
@@ -1229,8 +1224,7 @@ static int RsaPad_PSS(const byte* input, word32 inputLen, byte* pkcsBlock,
 #endif /* WC_RSA_PSS */
 #endif /* !WC_NO_RNG */
 
-static int RsaPad(const byte* input, word32 inputLen, byte* pkcsBlock,
-                           word32 pkcsBlockLen, byte padValue, WC_RNG* rng)
+static int RsaPad(const byte *input, word32 inputLen, byte *pkcsBlock, word32 pkcsBlockLen, byte padValue, _Ptr<WC_RNG> rng)
 {
     if (input == NULL || inputLen == 0 || pkcsBlock == NULL ||
                                                         pkcsBlockLen == 0) {
@@ -1284,10 +1278,7 @@ static int RsaPad(const byte* input, word32 inputLen, byte* pkcsBlock,
 }
 
 /* helper function to direct which padding is used */
-int wc_RsaPad_ex(const byte* input, word32 inputLen, byte* pkcsBlock,
-    word32 pkcsBlockLen, byte padValue, WC_RNG* rng, int padType,
-    enum wc_HashType hType, int mgf, byte* optLabel, word32 labelLen,
-    int saltLen, int bits, void* heap)
+int wc_RsaPad_ex(const byte *input, word32 inputLen, byte *pkcsBlock, word32 pkcsBlockLen, byte padValue, _Ptr<WC_RNG> rng, int padType, enum wc_HashType hType, int mgf, byte *optLabel, word32 labelLen, int saltLen, int bits, void *heap)
 {
     int ret;
 
@@ -1364,9 +1355,7 @@ int wc_RsaPad_ex(const byte* input, word32 inputLen, byte* pkcsBlock,
 #ifndef WC_NO_RSA_OAEP
 /* UnPad plaintext, set start to *output, return length of plaintext,
  * < 0 on error */
-static int RsaUnPad_OAEP(byte *pkcsBlock, unsigned int pkcsBlockLen,
-                            byte **output, enum wc_HashType hType, int mgf,
-                            byte* optLabel, word32 labelLen, void* heap)
+static int RsaUnPad_OAEP(byte *pkcsBlock, unsigned int pkcsBlockLen, _Ptr<byte*> output, enum wc_HashType hType, int mgf, byte *optLabel, word32 labelLen, void *heap)
 {
     int hLen;
     int ret;
@@ -1587,8 +1576,7 @@ static int RsaUnPad_PSS(byte *pkcsBlock, unsigned int pkcsBlockLen,
 
 /* UnPad plaintext, set start to *output, return length of plaintext,
  * < 0 on error */
-static int RsaUnPad(const byte *pkcsBlock, unsigned int pkcsBlockLen,
-                    byte **output, byte padValue)
+static int RsaUnPad(const byte *pkcsBlock, unsigned int pkcsBlockLen, _Ptr<byte*> output, byte padValue)
 {
     int    ret = BAD_FUNC_ARG;
     word16 i;
@@ -1652,23 +1640,20 @@ static int RsaUnPad(const byte *pkcsBlock, unsigned int pkcsBlockLen,
  *
  * bits is the key modulus size in bits
  */
-int wc_RsaUnPad_ex(byte* pkcsBlock, word32 pkcsBlockLen, byte** out,
-                   byte padValue, int padType, enum wc_HashType hType,
-                   int mgf, byte* optLabel, word32 labelLen, int saltLen,
-                   int bits, void* heap)
+int wc_RsaUnPad_ex(byte *pkcsBlock, word32 pkcsBlockLen, _Ptr<byte*> out, byte padValue, int padType, enum wc_HashType hType, int mgf, byte *optLabel, word32 labelLen, int saltLen, int bits, void *heap)
 {
     int ret;
 
     switch (padType) {
         case WC_RSA_PKCSV15_PAD:
             /*WOLFSSL_MSG("wolfSSL Using RSA PKCSV15 un-padding");*/
-            ret = RsaUnPad(pkcsBlock, pkcsBlockLen, out, padValue);
+            ret = RsaUnPad(pkcsBlock, pkcsBlockLen, ((byte **)out), padValue);
             break;
 
     #ifndef WC_NO_RSA_OAEP
         case WC_RSA_OAEP_PAD:
             WOLFSSL_MSG("wolfSSL Using RSA OAEP un-padding");
-            ret = RsaUnPad_OAEP((byte*)pkcsBlock, pkcsBlockLen, out,
+            ret = RsaUnPad_OAEP((byte*)pkcsBlock, pkcsBlockLen, ((byte **)out),
                                         hType, mgf, optLabel, labelLen, heap);
             break;
     #endif
@@ -2006,8 +1991,7 @@ done:
 }
 
 #else
-static int wc_RsaFunctionSync(const byte* in, word32 inLen, byte* out,
-                          word32* outLen, int type, RsaKey* key, WC_RNG* rng)
+static int wc_RsaFunctionSync(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen, int type, _Ptr<RsaKey> key, _Ptr<WC_RNG> rng)
 {
 #ifndef WOLFSSL_SP_MATH
 #ifdef WOLFSSL_SMALL_STACK
@@ -2572,8 +2556,7 @@ int cc310_RsaSSL_Verify(const byte* in, word32 inLen, byte* sig,
 }
 #endif /* WOLFSSL_CRYPTOCELL */
 
-int wc_RsaFunction(const byte* in, word32 inLen, byte* out,
-                          word32* outLen, int type, RsaKey* key, WC_RNG* rng)
+int wc_RsaFunction(const byte *in, word32 inLen, byte *out, _Ptr<word32> outLen, int type, _Ptr<RsaKey> key, _Ptr<WC_RNG> rng)
 {
     int ret = 0;
 
@@ -2699,12 +2682,7 @@ int wc_RsaFunction(const byte* in, word32 inLen, byte* out,
    labelSz : size of optional label buffer
    saltLen : Length of salt used in PSS
    rng : random number generator */
-static int RsaPublicEncryptEx(const byte* in, word32 inLen, byte* out,
-                            word32 outLen, RsaKey* key, int rsa_type,
-                            byte pad_value, int pad_type,
-                            enum wc_HashType hash, int mgf,
-                            byte* label, word32 labelSz, int saltLen,
-                            WC_RNG* rng)
+static int RsaPublicEncryptEx(const byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<RsaKey> key, int rsa_type, byte pad_value, int pad_type, enum wc_HashType hash, int mgf, byte *label, word32 labelSz, int saltLen, _Ptr<WC_RNG> rng)
 {
     int ret, sz;
 
@@ -2833,12 +2811,7 @@ static int RsaPublicEncryptEx(const byte* in, word32 inLen, byte* out,
    labelSz : size of optional label buffer
    saltLen : Length of salt used in PSS
    rng : random number generator */
-static int RsaPrivateDecryptEx(byte* in, word32 inLen, byte* out,
-                            word32 outLen, byte** outPtr, RsaKey* key,
-                            int rsa_type, byte pad_value, int pad_type,
-                            enum wc_HashType hash, int mgf,
-                            byte* label, word32 labelSz, int saltLen,
-                            WC_RNG* rng)
+static int RsaPrivateDecryptEx(byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<byte*> outPtr, _Ptr<RsaKey> key, int rsa_type, byte pad_value, int pad_type, enum wc_HashType hash, int mgf, byte *label, word32 labelSz, int saltLen, _Ptr<WC_RNG> rng)
 {
     int ret = RSA_WRONG_TYPE_E;
     byte* pad = NULL;
@@ -2933,7 +2906,7 @@ static int RsaPrivateDecryptEx(byte* in, word32 inLen, byte* out,
 
     case RSA_STATE_DECRYPT_UNPAD:
 #if !defined(WOLFSSL_RSA_VERIFY_ONLY) && !defined(WOLFSSL_RSA_VERIFY_INLINE)
-        ret = wc_RsaUnPad_ex(key->data, key->dataLen, &pad, pad_value, pad_type,
+        ret = wc_RsaUnPad_ex(key->data, key->dataLen, ((byte **)&pad), pad_value, pad_type,
                              hash, mgf, label, labelSz, saltLen,
                              mp_count_bits(&key->n), key->heap);
 #else
@@ -3024,8 +2997,7 @@ static int RsaPrivateDecryptEx(byte* in, word32 inLen, byte* out,
 
 #ifndef WOLFSSL_RSA_VERIFY_ONLY
 /* Public RSA Functions */
-int wc_RsaPublicEncrypt(const byte* in, word32 inLen, byte* out, word32 outLen,
-                                                     RsaKey* key, WC_RNG* rng)
+int wc_RsaPublicEncrypt(const byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<RsaKey> key, _Ptr<WC_RNG> rng)
 {
     return RsaPublicEncryptEx(in, inLen, out, outLen, key,
         RSA_PUBLIC_ENCRYPT, RSA_BLOCK_TYPE_2, WC_RSA_PKCSV15_PAD,
@@ -3034,10 +3006,7 @@ int wc_RsaPublicEncrypt(const byte* in, word32 inLen, byte* out, word32 outLen,
 
 
 #if !defined(WC_NO_RSA_OAEP) || defined(WC_RSA_NO_PADDING)
-int wc_RsaPublicEncrypt_ex(const byte* in, word32 inLen, byte* out,
-                    word32 outLen, RsaKey* key, WC_RNG* rng, int type,
-                    enum wc_HashType hash, int mgf, byte* label,
-                    word32 labelSz)
+int wc_RsaPublicEncrypt_ex(const byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<RsaKey> key, _Ptr<WC_RNG> rng, int type, enum wc_HashType hash, int mgf, byte *label, word32 labelSz)
 {
     return RsaPublicEncryptEx(in, inLen, out, outLen, key, RSA_PUBLIC_ENCRYPT,
         RSA_BLOCK_TYPE_2, type, hash, mgf, label, labelSz, 0, rng);
@@ -3047,42 +3016,39 @@ int wc_RsaPublicEncrypt_ex(const byte* in, word32 inLen, byte* out,
 
 
 #ifndef WOLFSSL_RSA_PUBLIC_ONLY
-int wc_RsaPrivateDecryptInline(byte* in, word32 inLen, byte** out, RsaKey* key)
+int wc_RsaPrivateDecryptInline(byte *in, word32 inLen, _Ptr<byte*> out, _Ptr<RsaKey> key)
 {
-    WC_RNG* rng;
+    _Ptr<WC_RNG> rng = ((void *)0);
 #ifdef WC_RSA_BLINDING
     rng = key->rng;
 #else
     rng = NULL;
 #endif
-    return RsaPrivateDecryptEx(in, inLen, in, inLen, out, key,
+    return RsaPrivateDecryptEx(in, inLen, in, inLen, ((byte **)out), key,
         RSA_PRIVATE_DECRYPT, RSA_BLOCK_TYPE_2, WC_RSA_PKCSV15_PAD,
         WC_HASH_TYPE_NONE, WC_MGF1NONE, NULL, 0, 0, rng);
 }
 
 
 #ifndef WC_NO_RSA_OAEP
-int wc_RsaPrivateDecryptInline_ex(byte* in, word32 inLen, byte** out,
-                                  RsaKey* key, int type, enum wc_HashType hash,
-                                  int mgf, byte* label, word32 labelSz)
+int wc_RsaPrivateDecryptInline_ex(byte *in, word32 inLen, _Ptr<byte*> out, _Ptr<RsaKey> key, int type, enum wc_HashType hash, int mgf, byte *label, word32 labelSz)
 {
-    WC_RNG* rng;
+    _Ptr<WC_RNG> rng = ((void *)0);
 #ifdef WC_RSA_BLINDING
     rng = key->rng;
 #else
     rng = NULL;
 #endif
-    return RsaPrivateDecryptEx(in, inLen, in, inLen, out, key,
+    return RsaPrivateDecryptEx(in, inLen, in, inLen, ((byte **)out), key,
         RSA_PRIVATE_DECRYPT, RSA_BLOCK_TYPE_2, type, hash,
         mgf, label, labelSz, 0, rng);
 }
 #endif /* WC_NO_RSA_OAEP */
 
 
-int wc_RsaPrivateDecrypt(const byte* in, word32 inLen, byte* out,
-                                                 word32 outLen, RsaKey* key)
+int wc_RsaPrivateDecrypt(const byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<RsaKey> key)
 {
-    WC_RNG* rng;
+    _Ptr<WC_RNG> rng = ((void *)0);
 #ifdef WC_RSA_BLINDING
     rng = key->rng;
 #else
@@ -3094,12 +3060,9 @@ int wc_RsaPrivateDecrypt(const byte* in, word32 inLen, byte* out,
 }
 
 #if !defined(WC_NO_RSA_OAEP) || defined(WC_RSA_NO_PADDING)
-int wc_RsaPrivateDecrypt_ex(const byte* in, word32 inLen, byte* out,
-                            word32 outLen, RsaKey* key, int type,
-                            enum wc_HashType hash, int mgf, byte* label,
-                            word32 labelSz)
+int wc_RsaPrivateDecrypt_ex(const byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<RsaKey> key, int type, enum wc_HashType hash, int mgf, byte *label, word32 labelSz)
 {
-    WC_RNG* rng;
+    _Ptr<WC_RNG> rng = ((void *)0);
 #ifdef WC_RSA_BLINDING
     rng = key->rng;
 #else
@@ -3113,31 +3076,29 @@ int wc_RsaPrivateDecrypt_ex(const byte* in, word32 inLen, byte* out,
 #endif /* WOLFSSL_RSA_PUBLIC_ONLY */
 
 #if !defined(WOLFSSL_CRYPTOCELL)
-int wc_RsaSSL_VerifyInline(byte* in, word32 inLen, byte** out, RsaKey* key)
+int wc_RsaSSL_VerifyInline(byte *in, word32 inLen, _Ptr<byte*> out, RsaKey *key : itype(_Ptr<RsaKey>))
 {
-    WC_RNG* rng;
+    _Ptr<WC_RNG> rng = ((void *)0);
 #ifdef WC_RSA_BLINDING
     rng = key->rng;
 #else
     rng = NULL;
 #endif
-    return RsaPrivateDecryptEx(in, inLen, in, inLen, out, key,
+    return RsaPrivateDecryptEx(in, inLen, in, inLen, ((byte **)out), key,
         RSA_PUBLIC_DECRYPT, RSA_BLOCK_TYPE_1, WC_RSA_PKCSV15_PAD,
         WC_HASH_TYPE_NONE, WC_MGF1NONE, NULL, 0, 0, rng);
 }
 #endif
 
 #ifndef WOLFSSL_RSA_VERIFY_ONLY
-int wc_RsaSSL_Verify(const byte* in, word32 inLen, byte* out, word32 outLen,
-                                                                 RsaKey* key)
+int wc_RsaSSL_Verify(const byte *in, word32 inLen, byte *out, word32 outLen, RsaKey *key : itype(_Ptr<RsaKey>))
 {
     return wc_RsaSSL_Verify_ex(in, inLen, out, outLen, key , WC_RSA_PKCSV15_PAD);
 }
 
-int  wc_RsaSSL_Verify_ex(const byte* in, word32 inLen, byte* out, word32 outLen,
-                         RsaKey* key, int pad_type)
+int wc_RsaSSL_Verify_ex(const byte *in, word32 inLen, byte *out, word32 outLen, _Ptr<RsaKey> key, int pad_type)
 {
-    WC_RNG* rng;
+    _Ptr<WC_RNG> rng = ((void *)0);
 
     if (key == NULL) {
         return BAD_FUNC_ARG;
@@ -3478,8 +3439,7 @@ int wc_RsaPSS_VerifyCheck(byte* in, word32 inLen, byte* out, word32 outLen,
 #endif
 
 #if !defined(WOLFSSL_RSA_PUBLIC_ONLY) && !defined(WOLFSSL_RSA_VERIFY_ONLY)
-int wc_RsaSSL_Sign(const byte* in, word32 inLen, byte* out, word32 outLen,
-                                                   RsaKey* key, WC_RNG* rng)
+int wc_RsaSSL_Sign(const byte *in, word32 inLen, byte *out, word32 outLen, RsaKey *key : itype(_Ptr<RsaKey>), _Ptr<WC_RNG> rng)
 {
     return RsaPublicEncryptEx(in, inLen, out, outLen, key,
         RSA_PRIVATE_ENCRYPT, RSA_BLOCK_TYPE_1, WC_RSA_PKCSV15_PAD,
@@ -3537,7 +3497,7 @@ int wc_RsaPSS_Sign_ex(const byte* in, word32 inLen, byte* out, word32 outLen,
 
 #if !defined(WOLFSSL_RSA_VERIFY_ONLY) || !defined(WOLFSSL_SP_MATH) || \
                                                              defined(WC_RSA_PSS)
-int wc_RsaEncryptSize(RsaKey* key)
+int wc_RsaEncryptSize(RsaKey *key : itype(_Ptr<RsaKey>))
 {
     int ret;
 
@@ -3559,8 +3519,7 @@ int wc_RsaEncryptSize(RsaKey* key)
 
 #ifndef WOLFSSL_RSA_VERIFY_ONLY
 /* flatten RsaKey structure into individual elements (e, n) */
-int wc_RsaFlattenPublicKey(RsaKey* key, byte* e, word32* eSz, byte* n,
-                                                                   word32* nSz)
+int wc_RsaFlattenPublicKey(_Ptr<RsaKey> key, byte *e, _Ptr<word32> eSz, byte *n, _Ptr<word32> nSz)
 {
     int sz, ret;
 
@@ -3592,7 +3551,7 @@ int wc_RsaFlattenPublicKey(RsaKey* key, byte* e, word32* eSz, byte* n,
 
 
 #ifndef WOLFSSL_RSA_VERIFY_ONLY
-static int RsaGetValue(mp_int* in, byte* out, word32* outSz)
+static int RsaGetValue(_Ptr<mp_int> in, byte *out, _Ptr<word32> outSz)
 {
     word32 sz;
     int ret = 0;
@@ -3613,10 +3572,7 @@ static int RsaGetValue(mp_int* in, byte* out, word32* outSz)
 }
 
 
-int wc_RsaExportKey(RsaKey* key,
-                    byte* e, word32* eSz, byte* n, word32* nSz,
-                    byte* d, word32* dSz, byte* p, word32* pSz,
-                    byte* q, word32* qSz)
+int wc_RsaExportKey(_Ptr<RsaKey> key, byte *e, _Ptr<word32> eSz, byte *n, _Ptr<word32> nSz, byte *d, _Ptr<word32> dSz, byte *p, _Ptr<word32> pSz, byte *q, _Ptr<word32> qSz)
 {
     int ret = BAD_FUNC_ARG;
 

@@ -99,9 +99,7 @@ static wolfSSL_Malloc_cb  malloc_function = NULL;
 static wolfSSL_Free_cb    free_function = NULL;
 static wolfSSL_Realloc_cb realloc_function = NULL;
 
-int wolfSSL_SetAllocators(wolfSSL_Malloc_cb  mf,
-                          wolfSSL_Free_cb    ff,
-                          wolfSSL_Realloc_cb rf)
+int wolfSSL_SetAllocators(wolfSSL_Malloc_cb mf, wolfSSL_Free_cb ff, wolfSSL_Realloc_cb rf)
 {
     malloc_function = mf;
     free_function = ff;
@@ -109,9 +107,7 @@ int wolfSSL_SetAllocators(wolfSSL_Malloc_cb  mf,
     return 0;
 }
 
-int wolfSSL_GetAllocators(wolfSSL_Malloc_cb*  mf,
-                          wolfSSL_Free_cb*    ff,
-                          wolfSSL_Realloc_cb* rf)
+int wolfSSL_GetAllocators(_Ptr<void* (size_t )> mf, _Ptr<void (void *)> ff, _Ptr<void* (void *, size_t )> rf)
 {
     if (mf) *mf = malloc_function;
     if (ff) *ff = free_function;
@@ -123,7 +119,7 @@ int wolfSSL_GetAllocators(wolfSSL_Malloc_cb*  mf,
 #ifdef WOLFSSL_DEBUG_MEMORY
 void* wolfSSL_Malloc(size_t size, const char* func, unsigned int line)
 #else
-void* wolfSSL_Malloc(size_t size)
+void * wolfSSL_Malloc(size_t size)
 #endif
 {
     void* res = 0;
@@ -212,7 +208,7 @@ void wolfSSL_Free(void *ptr)
 #ifdef WOLFSSL_DEBUG_MEMORY
 void* wolfSSL_Realloc(void *ptr, size_t size, const char* func, unsigned int line)
 #else
-void* wolfSSL_Realloc(void *ptr, size_t size)
+void * wolfSSL_Realloc(void *ptr, size_t size)
 #endif
 {
     void* res = 0;

@@ -193,7 +193,7 @@ static int Transform_Len(wc_Md5* md5, const byte* data, word32 len)
 #define MD5STEP(f, w, x, y, z, data, s) \
         w = rotlFixed(w + f(x, y, z) + data, s) + x
 
-static int Transform(wc_Md5* md5, const byte* data)
+static int Transform(_Ptr<wc_Md5> md5, const byte *data)
 {
     word32* buffer = (word32*)data;
     /* Copy context->state[] to working vars  */
@@ -282,7 +282,7 @@ static int Transform(wc_Md5* md5, const byte* data)
 
 #ifndef HAVE_MD5_CUST_API
 
-static WC_INLINE void AddLength(wc_Md5* md5, word32 len)
+static void AddLength(_Ptr<wc_Md5> md5, word32 len)
 {
     word32 tmp = md5->loLen;
     if ((md5->loLen += len) < tmp) {
@@ -290,7 +290,7 @@ static WC_INLINE void AddLength(wc_Md5* md5, word32 len)
     }
 }
 
-static int _InitMd5(wc_Md5* md5)
+static int _InitMd5(_Ptr<wc_Md5> md5)
 {
     int ret = 0;
 
@@ -309,7 +309,7 @@ static int _InitMd5(wc_Md5* md5)
     return ret;
 }
 
-int wc_InitMd5_ex(wc_Md5* md5, void* heap, int devId)
+int wc_InitMd5_ex(_Ptr<wc_Md5> md5, void *heap, int devId)
 {
     int ret = 0;
 
@@ -332,7 +332,7 @@ int wc_InitMd5_ex(wc_Md5* md5, void* heap, int devId)
 }
 
 /* do block size increments/updates */
-int wc_Md5Update(wc_Md5* md5, const byte* data, word32 len)
+int wc_Md5Update(wc_Md5 *md5 : itype(_Ptr<wc_Md5>), const byte *data, word32 len)
 {
     int ret = 0;
     word32 blocksLen;
@@ -433,7 +433,7 @@ int wc_Md5Update(wc_Md5* md5, const byte* data, word32 len)
     return ret;
 }
 
-int wc_Md5Final(wc_Md5* md5, byte* hash)
+int wc_Md5Final(wc_Md5 *md5 : itype(_Ptr<wc_Md5>), byte *hash)
 {
     byte* local;
 
@@ -492,7 +492,7 @@ int wc_Md5Final(wc_Md5* md5, byte* hash)
 #endif /* !HAVE_MD5_CUST_API */
 
 
-int wc_InitMd5(wc_Md5* md5)
+int wc_InitMd5(wc_Md5 *md5 : itype(_Ptr<wc_Md5>))
 {
     if (md5 == NULL) {
         return BAD_FUNC_ARG;
@@ -500,7 +500,7 @@ int wc_InitMd5(wc_Md5* md5)
     return wc_InitMd5_ex(md5, NULL, INVALID_DEVID);
 }
 
-void wc_Md5Free(wc_Md5* md5)
+void wc_Md5Free(wc_Md5 *md5 : itype(_Ptr<wc_Md5>))
 {
     if (md5 == NULL)
         return;
@@ -513,7 +513,7 @@ void wc_Md5Free(wc_Md5* md5)
 #endif
 }
 
-int wc_Md5GetHash(wc_Md5* md5, byte* hash)
+int wc_Md5GetHash(wc_Md5 *md5, byte *hash)
 {
     int ret;
     wc_Md5 tmpMd5;
@@ -529,7 +529,7 @@ int wc_Md5GetHash(wc_Md5* md5, byte* hash)
     return ret;
 }
 
-int wc_Md5Copy(wc_Md5* src, wc_Md5* dst)
+int wc_Md5Copy(wc_Md5 *src, wc_Md5 *dst)
 {
     int ret = 0;
 
