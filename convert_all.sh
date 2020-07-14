@@ -1,0 +1,87 @@
+CCONV=/Users/shilpa-roy/checkedc-clang/llvm/cmake-build-debug/bin/cconv-standalone
+INCLUDES=/Users/shilpa-roy/checkedc/include/:/Users/shilpa-roy/checkedc-wolfssl4.4.0/
+BASEDIR=./wolfcrypt/src
+
+CPATH=$INCLUDES $CCONV \
+-output-postfix=checked \
+-base-dir="$BASEDIR" \
+$BASEDIR/aes.c \
+$BASEDIR/arc4.c \
+$BASEDIR/asm.c \
+$BASEDIR/asn.c \
+$BASEDIR/async.c \
+$BASEDIR/blake2b.c \
+$BASEDIR/blake2s.c \
+$BASEDIR/camellia.c \
+$BASEDIR/chacha.c \
+$BASEDIR/chacha20_poly1305.c \
+$BASEDIR/cmac.c \
+$BASEDIR/coding.c \
+$BASEDIR/compress.c \
+$BASEDIR/cpuid.c \
+$BASEDIR/cryptocb.c \
+$BASEDIR/curve25519.c \
+$BASEDIR/curve448.c \
+$BASEDIR/des3.c \
+$BASEDIR/dh.c \
+$BASEDIR/dsa.c \
+$BASEDIR/ecc.c \
+$BASEDIR/ecc_fp.c \
+$BASEDIR/ed25519.c \
+$BASEDIR/ed448.c \
+$BASEDIR/error.c \
+$BASEDIR/evp.c \
+$BASEDIR/fe_448.c \
+$BASEDIR/fe_low_mem.c \
+$BASEDIR/fe_operations.c \
+$BASEDIR/fips.c \
+$BASEDIR/fips_test.c \
+$BASEDIR/ge_448.c \
+$BASEDIR/ge_low_mem.c \
+$BASEDIR/ge_operations.c \
+$BASEDIR/hash.c \
+$BASEDIR/hc128.c \
+$BASEDIR/hmac.c \
+$BASEDIR/idea.c \
+$BASEDIR/integer.c \
+$BASEDIR/logging.c \
+$BASEDIR/md2.c \
+$BASEDIR/md4.c \
+$BASEDIR/md5.c \
+$BASEDIR/memory.c \
+$BASEDIR/misc.c \
+$BASEDIR/pkcs12.c \
+$BASEDIR/pkcs7.c \
+$BASEDIR/poly1305.c \
+$BASEDIR/pwdbased.c \
+$BASEDIR/rabbit.c \
+$BASEDIR/random.c \
+$BASEDIR/ripemd.c \
+$BASEDIR/rsa.c \
+$BASEDIR/selftest.c \
+$BASEDIR/sha.c \
+$BASEDIR/sha256.c \
+$BASEDIR/sha3.c \
+$BASEDIR/sha512.c \
+$BASEDIR/signature.c \
+$BASEDIR/sp_arm32.c \
+$BASEDIR/sp_arm64.c \
+$BASEDIR/sp_armthumb.c \
+$BASEDIR/sp_c32.c \
+$BASEDIR/sp_c64.c \
+$BASEDIR/sp_cortexm.c \
+$BASEDIR/sp_dsp32.c \
+$BASEDIR/sp_int.c \
+$BASEDIR/sp_x86_64.c \
+$BASEDIR/srp.c \
+$BASEDIR/tfm.c \
+$BASEDIR/wc_dsp.c \
+$BASEDIR/wc_encrypt.c \
+$BASEDIR/wc_pkcs11.c \
+$BASEDIR/wc_port.c \
+$BASEDIR/wolfcrypt_first.c \
+$BASEDIR/wolfcrypt_last.c \
+$BASEDIR/wolfevent.c \
+$BASEDIR/wolfmath.c \
+
+
